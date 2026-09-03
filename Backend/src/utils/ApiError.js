@@ -1,9 +1,9 @@
-<<<<<<< HEAD
-=======
+<<<<<<<<< Temporary merge branch 1
+=========
 /**
  * Standardized Operational API Error
  */
->>>>>>> b7782a51ab4547fa45f528ac0894c3b7bd6d4e53
+>>>>>>>>> Temporary merge branch 2
 export class ApiError extends Error {
   constructor(
     statusCode,

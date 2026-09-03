@@ -61,6 +61,10 @@ app.use((req, res, next) => {
 
 // Centralized Error Handling Middleware
 app.use(errorMiddleware);
+=========
+    docs: '/api/health',
+  });
+});
 
 // API Routes
 app.use('/api', masterRouter);
