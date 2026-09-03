@@ -19,12 +19,6 @@ import EmployerDiscovery from '../pages/employerPanel/EmployerDiscovery';
 import AiCareerGuidance from '../pages/careerGuidance/AiCareerGuidance';
 import TrainerDevelopment from '../pages/trainerDevelopment/TrainerDevelopment';
 import SkillAssessment from '../pages/assessment/SkillAssessment';
-import IndustryCurriculum from '../pages/curriculum/IndustryCurriculum';
-import DynamicCurriculum from '../pages/curriculum/DynamicCurriculum';
-import DemandForecasting from '../pages/demandForecasting/DemandForecasting';
-import EmployerDiscovery from '../pages/employerPanel/EmployerDiscovery';
-import AiCareerGuidance from '../pages/careerGuidance/AiCareerGuidance';
-import TrainerDevelopment from '../pages/trainerDevelopment/TrainerDevelopment';
 
 const AppRoutes = () => {
   return (

@@ -1,31 +1,27 @@
 import axiosClient from './axiosClient';
 
-export const getCareerTracksApi = async (params = {}) => {
-  return await axiosClient.get('/career/tracks', { params });
-};
-
-export const getCareerPathwayByIdApi = async (id) => {
-  return await axiosClient.get(`/career/tracks/${id}`);
-};
-
-export const generateCustomCareerPathApi = async (preferences) => {
-  return await axiosClient.post('/career/generate-pathway', preferences);
-};
-
-const careerGuidanceApi = {
-  getCareerTracksApi,
-  getCareerPathwayByIdApi,
-  generateCustomCareerPathApi,
-};
-
-export default careerGuidanceApi;
 /**
  * Request tailored career recommendations based on skills, aspirations, and interests
  * @param {Object} profileData - { targetDomain, currentSkills, experienceLevel, interests }
  */
 export const getCareerRecommendationsApi = async (profileData = {}) => {
   const response = await axiosClient.post('/career-guidance/recommendations', profileData);
-  return response.data;
+  return response.data || response;
+};
+
+export const getCareerTracksApi = async (params = {}) => {
+  const response = await axiosClient.get('/career/tracks', { params });
+  return response.data || response;
+};
+
+export const getCareerPathwayByIdApi = async (id) => {
+  const response = await axiosClient.get(`/career/tracks/${id}`);
+  return response.data || response;
+};
+
+export const generateCustomCareerPathApi = async (preferences) => {
+  const response = await axiosClient.post('/career/generate-pathway', preferences);
+  return response.data || response;
 };
 
 /**
@@ -34,7 +30,7 @@ export const getCareerRecommendationsApi = async (profileData = {}) => {
  */
 export const getRoadmapForRoleApi = async (roleId) => {
   const response = await axiosClient.get(`/career-guidance/roadmap/${roleId}`);
-  return response.data;
+  return response.data || response;
 };
 
 /**
@@ -44,5 +40,16 @@ export const getRoadmapForRoleApi = async (roleId) => {
  */
 export const askCareerAdvisorApi = async (prompt, context = {}) => {
   const response = await axiosClient.post('/career-guidance/chat', { prompt, context });
-  return response.data;
+  return response.data || response;
 };
+
+const careerGuidanceApi = {
+  getCareerRecommendationsApi,
+  getCareerTracksApi,
+  getCareerPathwayByIdApi,
+  generateCustomCareerPathApi,
+  getRoadmapForRoleApi,
+  askCareerAdvisorApi,
+};
+
+export default careerGuidanceApi;
