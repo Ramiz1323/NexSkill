@@ -275,12 +275,8 @@ const DashboardOverview = () => {
                     <Icon className="w-5 h-5" />
                   </div>
                   <div className="min-w-0">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="text-xs font-mono font-bold text-indigo-500">{p.mod}</span>
-                      <h3 className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors truncate">
-                  <div>
                     <div className="flex items-center gap-1.5">
-                      <h3 className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+                      <h3 className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors truncate">
                         {p.title}
                       </h3>
                     </div>
