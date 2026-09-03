@@ -15,6 +15,9 @@ const Sidebar = () => {
         <NavLink to="/credential-tracker" className={({ isActive }) => (isActive ? 'font-bold' : '')}>
           Credential Tracker
         </NavLink>
+        <NavLink to="/employer-discovery" className={({ isActive }) => (isActive ? 'font-bold' : '')}>
+          Employer Discovery
+        </NavLink>
       </nav>
     </aside>
   );
