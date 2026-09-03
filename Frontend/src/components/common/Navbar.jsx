@@ -21,6 +21,15 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    navigate('/login');
+  };
+
+  const notifications = [];
   const userPersona = user?.role || user?.persona || 'Student';
 
   return (
