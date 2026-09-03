@@ -21,16 +21,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [activeRole, setActiveRole] = useState('Student');
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
-
-  const handleLogout = () => {
-    dispatch(logoutUser());
-    navigate('/login');
-  };
-
-  const notifications = [];
+  const userPersona = user?.role || user?.persona || 'Student';
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 transition-all shadow-sm">
@@ -67,28 +58,41 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Center: Ecosystem Role Switcher (Persona Demo Mode) */}
-        <div className="hidden md:flex items-center gap-1 p-1 bg-slate-100 rounded-xl border border-slate-200">
-          <span className="text-[11px] font-semibold text-slate-500 px-2 flex items-center gap-1">
-            <Zap className="w-3 h-3 text-amber-500" /> Demo Persona:
-          </span>
-          {['Student', 'Academic / Trainer', 'Employer'].map((role) => (
-            <button
-              key={role}
-              onClick={() => setActiveRole(role)}
-              className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all ${
-                activeRole === role
-                  ? 'bg-white text-indigo-700 shadow-sm border border-slate-200/60'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              {role}
-            </button>
-          ))}
-        </div>
+        {/* Center: Main Navigation Links */}
+        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+          <Link
+            to="/"
+            className={`transition-colors hover:text-indigo-600 ${
+              location.pathname === '/' ? 'text-indigo-600 font-semibold' : 'text-slate-600'
+            }`}
+          >
+            Home
+          </Link>
+          <Link
+            to="/dashboard"
+            className={`transition-colors hover:text-indigo-600 ${
+              location.pathname.startsWith('/dashboard') ? 'text-indigo-600 font-semibold' : 'text-slate-600'
+            }`}
+          >
+            Dashboard
+          </Link>
+          <Link
+            to="/market-intelligence"
+            className={`transition-colors hover:text-indigo-600 ${
+              location.pathname === '/market-intelligence' ? 'text-indigo-600 font-semibold' : 'text-slate-600'
+            }`}
+          >
+            Market Signals
+          </Link>
+        </nav>
 
         {/* Right: Actions & Profile */}
         <div className="flex items-center gap-2.5 sm:gap-3">
+          {/* User Specific Persona Badge */}
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold">
+            <Zap className="w-3.5 h-3.5 text-indigo-600" />
+            <span>Persona: {userPersona}</span>
+          </div>
           {/* Notifications */}
           <div className="relative">
             <button
