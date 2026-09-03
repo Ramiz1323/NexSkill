@@ -9,6 +9,8 @@ import { roadmapRoutes } from '../modules/roadmap/index.js';
 import { learningRoutes } from '../modules/learning/index.js';
 import { labourMarketRoutes } from '../modules/labourMarket/index.js';
 import { emergingSkillsRoutes } from '../modules/emergingSkills/index.js';
+import { aiRoutes } from '../modules/ai/index.js';
+import { analyticsRoutes } from '../modules/analytics/index.js';
 import healthRoutes from './health.routes.js';
 
 const router = Router();
@@ -32,6 +34,10 @@ router.use('/learning', learningRoutes);
 router.use('/labour-market', labourMarketRoutes);
 router.use('/emerging-skills', emergingSkillsRoutes);
 
+// Phase 10: AI Career Recommendation & Platform Analytics
+router.use('/ai', aiRoutes);
+router.use('/analytics', analyticsRoutes);
+
 export {
   router as masterRouter,
   employerRoutes,
@@ -44,6 +50,8 @@ export {
   learningRoutes,
   labourMarketRoutes,
   emergingSkillsRoutes,
+  aiRoutes,
+  analyticsRoutes,
 };
 
 export default router;
