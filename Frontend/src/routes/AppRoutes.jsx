@@ -11,6 +11,10 @@ import Register from '../pages/auth/Register';
 import DashboardOverview from '../pages/dashboard/DashboardOverview';
 import AtsResumeAnalyzer from '../pages/resumeAnalyzer/AtsResumeAnalyzer';
 import CredentialTracker from '../pages/progressTracker/CredentialTracker';
+import MarketIntelligence from '../pages/marketIntelligence/MarketIntelligence';
+import DemandForecasting from '../pages/demandForecasting/DemandForecasting';
+import DynamicCurriculum from '../pages/curriculum/DynamicCurriculum';
+import IndustryCurriculum from '../pages/curriculum/IndustryCurriculum';
 
 const AppRoutes = () => {
   return (
@@ -32,6 +36,10 @@ const AppRoutes = () => {
           <Route path="/dashboard" element={<DashboardOverview />} />
           <Route path="/resume-analyzer" element={<AtsResumeAnalyzer />} />
           <Route path="/credential-tracker" element={<CredentialTracker />} />
+          <Route path="/market-intelligence" element={<MarketIntelligence />} />
+          <Route path="/demand-forecasting" element={<DemandForecasting />} />
+          <Route path="/dynamic-curriculum" element={<DynamicCurriculum />} />
+          <Route path="/industry-curriculum" element={<IndustryCurriculum />} />
         </Route>
       </Route>
     </Routes>
