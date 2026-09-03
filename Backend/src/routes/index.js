@@ -3,6 +3,9 @@ import ApiResponse from '../utils/ApiResponse.js';
 
 const router = Router();
 
+import authRoutes from '../modules/auth/auth.routes.js';
+import userRoutes from '../modules/users/user.routes.js';
+
 // Health Check Route
 router.get('/health', (req, res) => {
   return res.status(200).json(
@@ -19,8 +22,11 @@ router.get('/health', (req, res) => {
   );
 });
 
-// Domain Routes Mount Points (Ready for Phase 1 - 4)
-// router.use('/auth', authRoutes);
+// Phase 1 Domain Routes
+router.use('/auth', authRoutes);
+router.use('/users', userRoutes);
+
+// Phase 2 - 4 Future Mount Points
 // router.use('/students', studentRoutes);
 // router.use('/skills', skillRoutes);
 // router.use('/assessments', assessmentRoutes);
