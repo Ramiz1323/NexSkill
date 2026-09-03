@@ -18,6 +18,12 @@ const Sidebar = () => {
         <NavLink to="/employer-discovery" className={({ isActive }) => (isActive ? 'font-bold' : '')}>
           Employer Discovery
         </NavLink>
+        <NavLink to="/career-guidance" className={({ isActive }) => (isActive ? 'font-bold' : '')}>
+          AI Career Guidance
+        </NavLink>
+        <NavLink to="/trainer-development" className={({ isActive }) => (isActive ? 'font-bold' : '')}>
+          Trainer Development
+        </NavLink>
       </nav>
     </aside>
   );
