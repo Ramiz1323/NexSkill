@@ -138,12 +138,12 @@ export default function IndustryCurriculum() {
 
       {/* Curriculum Grid */}
       <section className="space-y-4">
-        <div className="flex justify-between items-center text-xs text-slate-500 font-semibold">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs text-slate-500 font-semibold">
           <span>Showing {filteredList.length} verified learning tracks</span>
           <span>Co-designed with 40+ corporate hiring partners</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
           {filteredList.map((track) => (
             <Card
               key={track.id || track._id}

@@ -128,7 +128,7 @@ const EmployerDiscovery = () => {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto">
+    <div className="space-y-6 max-w-7xl mx-auto px-1 sm:px-2">
       {/* Header Section */}
       <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
@@ -168,7 +168,7 @@ const EmployerDiscovery = () => {
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
           {/* Skill Tag Input */}
           <div>
             <label className="block text-xs font-semibold mb-1 text-slate-700">Required Skills</label>
@@ -281,7 +281,7 @@ const EmployerDiscovery = () => {
           </Button>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {candidates.map((candidate) => {
             const candidateId = candidate._id || candidate.id;
             const matchScore = candidate.matchScore ?? candidate.readinessScore ?? 0;

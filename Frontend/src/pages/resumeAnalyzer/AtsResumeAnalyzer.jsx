@@ -95,7 +95,9 @@ const AtsResumeAnalyzer = () => {
                 onClick={() => navigate('/dynamic-curriculum')}
                 className="flex items-center gap-1.5 text-xs"
               >
-                Remediate in Dynamic Curriculum <ArrowRight className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Remediate in Dynamic Curriculum</span>
+                <span className="sm:hidden">Remediate</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </Button>
             }
           >
