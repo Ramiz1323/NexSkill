@@ -200,16 +200,14 @@ const Home = () => {
         {/* Subtle Ambient Light Blooms */}
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[45rem] h-[22rem] bg-gradient-to-tr from-indigo-200/50 via-cyan-100/40 to-emerald-100/30 blur-3xl rounded-full pointer-events-none -z-10" />
 
-        {/* SIH 2026 Header Pill */}
+        {/* Header Pill */}
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-bold mb-6 shadow-sm">
           <span className="flex h-2 w-2 relative">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
           <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-          <span>Smart India Hackathon 2026</span>
-          <span className="text-slate-300">•</span>
-          <span>Problem Statement 26134</span>
+          <span>AI-Powered Skill Alignment Platform</span>
         </div>
 
         {/* Main Title */}
@@ -323,7 +321,7 @@ const Home = () => {
             9 Connected Ecosystem Pillars
           </h2>
           <p className="mt-3 text-sm sm:text-base text-slate-600">
-            Every module addresses a specific bottleneck identified in SIH Problem Statement 26134.
+            Every module addresses key workforce bottlenecks with real-time data & AI.
           </p>
         </div>
 

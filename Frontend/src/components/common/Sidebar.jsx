@@ -121,23 +121,23 @@ const Sidebar = () => {
         ))}
       </div>
 
-      {/* SIH Status Card */}
+      {/* Ecosystem Status Card */}
       <div className="mt-4 pt-3 border-t border-slate-200">
         <div className="p-3.5 rounded-2xl bg-indigo-50/50 border border-indigo-100">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-indigo-600 shrink-0" />
             <span className="text-xs font-bold text-slate-900">
-              SIH 2026 Prototype
+              NexSkill Engine
             </span>
           </div>
           <p className="text-[11px] text-slate-600 mt-1 leading-tight">
-            Problem Statement 26134: Skill Development Alignment Engine.
+            Skill Development & Alignment Platform.
           </p>
           <div className="mt-2.5 flex items-center justify-between text-[10px] text-indigo-600 font-semibold">
             <span>9 Ecosystem Pillars</span>
             <span className="flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-              Connected
+              Active
             </span>
           </div>
         </div>

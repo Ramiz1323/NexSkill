@@ -53,7 +53,7 @@ const Login = () => {
     <Card
       title="Welcome to NexSkill"
       subtitle="Sign in to access your customized skill alignment dashboard"
-      badge="SIH 2026"
+      badge="AI Platform"
       className="shadow-xl bg-white border border-slate-200"
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -109,13 +109,13 @@ const Login = () => {
           icon={LogIn}
           className="mt-2 w-full py-2.5"
         >
-          Sign In to Ecosystem
+          Sign In to Platform
         </Button>
 
         <div className="text-center mt-3 pt-3 border-t border-slate-100 text-xs text-slate-500">
           New to NexSkill?{' '}
           <Link to="/register" className="text-indigo-600 font-bold hover:underline">
-            Register for SIH Demo
+            Register Account
           </Link>
         </div>
       </form>

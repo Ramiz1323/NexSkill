@@ -35,7 +35,7 @@ const Navbar = () => {
   return (
     <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 transition-all shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-        {/* Left: Brand Logo & SIH Tag */}
+        {/* Left: Brand Logo */}
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-2.5 group">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/25 group-hover:scale-105 transition-transform">
@@ -46,12 +46,9 @@ const Navbar = () => {
                 <span className="font-extrabold text-xl tracking-tight text-slate-900">
                   Nex<span className="text-indigo-600">Skill</span>
                 </span>
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
-                  SIH 2026
-                </span>
               </div>
               <span className="text-[10px] text-slate-500 leading-none">
-                PS 26134 • Skill Alignment Engine
+                Skill Alignment Engine
               </span>
             </div>
           </Link>

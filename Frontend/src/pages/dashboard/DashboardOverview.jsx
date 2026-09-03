@@ -70,7 +70,7 @@ const DashboardOverview = () => {
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold mb-3 backdrop-blur-md border border-white/20">
               <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span>SIH 2026 Problem Statement 26134 Command Center</span>
+              <span>AI-Powered Executive Command Center</span>
             </div>
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white">
               Welcome, {user?.name || user?.email?.split('@')[0] || 'Candidate'}!
@@ -249,7 +249,7 @@ const DashboardOverview = () => {
         <div className="flex items-center justify-between pb-4 mb-6 border-b border-slate-100">
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 block mb-1">
-              COMPLETE SIH 2026 ECOSYSTEM
+              COMPLETE PLATFORM ECOSYSTEM
             </span>
             <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
               9 Connected Solution Pillars Launchpad
