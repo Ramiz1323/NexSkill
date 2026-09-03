@@ -1,11 +1,5 @@
 import axios from 'axios';
 
-const axiosClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  timeout: 10000,
 const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 const axiosClient = axios.create({
@@ -13,15 +7,18 @@ const axiosClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 10000,
 });
 
 axiosClient.interceptors.request.use(
   (config) => {
+    const token = localStorage.getItem('token') || localStorage.getItem('nexskill_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 axiosClient.interceptors.response.use(
@@ -35,13 +32,6 @@ axiosClient.interceptors.response.use(
       'An unexpected network error occurred';
     return Promise.reject(new Error(message));
   }
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
 );
 
 export default axiosClient;

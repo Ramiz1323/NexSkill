@@ -11,6 +11,10 @@ import Register from '../pages/auth/Register';
 import DashboardOverview from '../pages/dashboard/DashboardOverview';
 import AtsResumeAnalyzer from '../pages/resumeAnalyzer/AtsResumeAnalyzer';
 import CredentialTracker from '../pages/progressTracker/CredentialTracker';
+import MarketIntelligence from '../pages/marketIntelligence/MarketIntelligence';
+import IndustryCurriculum from '../pages/curriculum/IndustryCurriculum';
+import DynamicCurriculum from '../pages/curriculum/DynamicCurriculum';
+import DemandForecasting from '../pages/demandForecasting/DemandForecasting';
 import EmployerDiscovery from '../pages/employerPanel/EmployerDiscovery';
 import AiCareerGuidance from '../pages/careerGuidance/AiCareerGuidance';
 import TrainerDevelopment from '../pages/trainerDevelopment/TrainerDevelopment';
@@ -21,6 +25,12 @@ const AppRoutes = () => {
       {/* Public Routes wrapped in MainLayout */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/market-intelligence" element={<MarketIntelligence />} />
+        <Route path="/industry-curriculum" element={<IndustryCurriculum />} />
+        <Route path="/curriculum/industry" element={<IndustryCurriculum />} />
+        <Route path="/dynamic-curriculum" element={<DynamicCurriculum />} />
+        <Route path="/curriculum/dynamic" element={<DynamicCurriculum />} />
+        <Route path="/demand-forecasting" element={<DemandForecasting />} />
       </Route>
 
       {/* Auth Routes wrapped in AuthLayout */}
@@ -35,6 +45,10 @@ const AppRoutes = () => {
           <Route path="/dashboard" element={<DashboardOverview />} />
           <Route path="/resume-analyzer" element={<AtsResumeAnalyzer />} />
           <Route path="/credential-tracker" element={<CredentialTracker />} />
+          <Route path="/dashboard/market-intelligence" element={<MarketIntelligence />} />
+          <Route path="/dashboard/industry-curriculum" element={<IndustryCurriculum />} />
+          <Route path="/dashboard/dynamic-curriculum" element={<DynamicCurriculum />} />
+          <Route path="/dashboard/demand-forecasting" element={<DemandForecasting />} />
           <Route path="/employer-discovery" element={<EmployerDiscovery />} />
           <Route path="/career-guidance" element={<AiCareerGuidance />} />
           <Route path="/trainer-development" element={<TrainerDevelopment />} />

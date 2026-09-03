@@ -1,8 +1,6 @@
+export { errorMiddleware, default } from './error.middleware.js';
 import { ApiError } from '../utils/ApiError.js';
 
-/**
- * Centralized error handling middleware
- */
 export const errorHandler = (err, req, res, next) => {
   let error = err;
 
@@ -25,3 +23,4 @@ export const errorHandler = (err, req, res, next) => {
 };
 
 export default errorHandler;
+>>>>>>>>> Temporary merge branch 2

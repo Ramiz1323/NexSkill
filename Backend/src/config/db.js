@@ -1,3 +1,6 @@
+<<<<<<<<< Temporary merge branch 1
+export { connectDB, default } from './database.js';
+=========
 import mongoose from 'mongoose';
 
 export const connectDB = async () => {
@@ -13,3 +16,4 @@ export const connectDB = async () => {
 };
 
 export default connectDB;
+>>>>>>>>> Temporary merge branch 2
