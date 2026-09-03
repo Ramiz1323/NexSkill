@@ -1,15 +1,17 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import Loader from '../components/common/Loader';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useSelector((state) => state.auth);
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
   if (loading) {
-    return <div className="p-4 text-center">Loading authentication state...</div>;
+    return <Loader message="Verifying session security..." />;
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !token) {
     return <Navigate to="/login" replace />;
   }
 
@@ -17,3 +19,4 @@ const ProtectedRoute = ({ children }) => {
 };
 
 export default ProtectedRoute;
+

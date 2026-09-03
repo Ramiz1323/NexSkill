@@ -15,6 +15,10 @@ import MarketIntelligence from '../pages/marketIntelligence/MarketIntelligence';
 import DemandForecasting from '../pages/demandForecasting/DemandForecasting';
 import DynamicCurriculum from '../pages/curriculum/DynamicCurriculum';
 import IndustryCurriculum from '../pages/curriculum/IndustryCurriculum';
+import EmployerDiscovery from '../pages/employerPanel/EmployerDiscovery';
+import AiCareerGuidance from '../pages/careerGuidance/AiCareerGuidance';
+import TrainerDevelopment from '../pages/trainerDevelopment/TrainerDevelopment';
+import SkillAssessment from '../pages/assessment/SkillAssessment';
 
 const AppRoutes = () => {
   return (
@@ -34,16 +38,21 @@ const AppRoutes = () => {
       <Route element={<ProtectedRoute />}>
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<DashboardOverview />} />
+          <Route path="/assessment" element={<SkillAssessment />} />
           <Route path="/resume-analyzer" element={<AtsResumeAnalyzer />} />
           <Route path="/credential-tracker" element={<CredentialTracker />} />
           <Route path="/market-intelligence" element={<MarketIntelligence />} />
           <Route path="/demand-forecasting" element={<DemandForecasting />} />
           <Route path="/dynamic-curriculum" element={<DynamicCurriculum />} />
           <Route path="/industry-curriculum" element={<IndustryCurriculum />} />
+          <Route path="/employer-discovery" element={<EmployerDiscovery />} />
+          <Route path="/career-guidance" element={<AiCareerGuidance />} />
+          <Route path="/trainer-development" element={<TrainerDevelopment />} />
         </Route>
       </Route>
     </Routes>
   );
 };
+
 
 export default AppRoutes;

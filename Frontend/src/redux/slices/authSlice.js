@@ -62,13 +62,17 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+const storedToken = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
 const initialState = {
   user: null,
-  token: typeof window !== 'undefined' ? localStorage.getItem('token') : null,
-  isAuthenticated: false,
+  token: storedToken,
+  isAuthenticated: Boolean(storedToken),
   loading: false,
   error: null,
 };
+
+
 
 const authSlice = createSlice({
   name: 'auth',
