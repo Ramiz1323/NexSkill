@@ -13,8 +13,15 @@ router.get(
     const dbSkills = await EmergingSkill.find().lean();
 
     if (dbSkills && dbSkills.length > 0) {
+      const formatted = dbSkills.map((s) => ({
+        skill: s.skillName,
+        growth2026: s.projectedGrowthRate || Math.round((s.demandForecastScore || 70) * 0.8),
+        growth2028: Math.round((s.projectedGrowthRate || 60) * 1.5),
+        riskScore: s.displacementRiskScore > 50 ? 'High Risk' : s.displacementRiskScore > 25 ? 'Moderate' : 'Low',
+        adoption: s.adoptionRate > 75 ? 'Hypergrowth' : s.adoptionRate > 50 ? 'Mainstream Standard' : 'Rapid Growth',
+      }));
       return res.status(200).json(
-        new ApiResponse(200, dbSkills, `Projections fetched for ${horizon} horizon`)
+        new ApiResponse(200, formatted, `Projections fetched for ${horizon} horizon`)
       );
     }
 
@@ -23,6 +30,7 @@ router.get(
       { skill: 'Kubernetes & Cloud Orchestration', growth2026: 72, growth2028: 110, riskScore: 'Very Low', adoption: 'Mainstream Standard' },
       { skill: 'Cybersecurity Threat Modeling', growth2026: 65, growth2028: 98, riskScore: 'Low', adoption: 'Mandatory' },
       { skill: 'Rust & Systems Optimization', growth2026: 54, growth2028: 85, riskScore: 'Moderate', adoption: 'Rapid Growth' },
+      { skill: 'Distributed Ledger & Smart Contracts', growth2026: 42, growth2028: 68, riskScore: 'Moderate', adoption: 'Selective' },
       { skill: 'Legacy Monolithic Maintenance', growth2026: -28, growth2028: -64, riskScore: 'High Risk', adoption: 'Declining' },
     ];
 
@@ -49,9 +57,9 @@ router.get(
   })
 );
 
-// 3. Automation Impact Analysis
+// 3. Automation Impact & Risk Analysis
 router.get(
-  '/automation-impact',
+  ['/automation-risk', '/automation-impact'],
   asyncHandler(async (req, res) => {
     const analysis = [
       { sector: 'Manual Software QA & Basic Scripting', displacementProbability: 68, mitigationStrategy: 'Upskill to AI-augmented Test Automation & Security QA' },

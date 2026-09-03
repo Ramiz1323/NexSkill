@@ -4,22 +4,59 @@ import ApiResponse from '../utils/ApiResponse.js';
 
 const router = Router();
 
-// 1. Get Student Progress
+// In-memory store for credentials
+let storedCredentials = [
+  {
+    id: 'cred-1',
+    title: 'Full-Stack Cloud Readiness Credential',
+    issuer: 'NexSkill & AWS Industry Alliance',
+    issueDate: 'March 2026',
+    verified: true,
+    credentialUrl: 'https://credentials.nexskill.org/cert/aws-cloud-2026',
+  },
+  {
+    id: 'cred-2',
+    title: 'AI Systems & RAG Diagnostics Certification',
+    issuer: 'NASSCOM FutureSkills Prime',
+    issueDate: 'Feb 2026',
+    verified: true,
+    credentialUrl: 'https://credentials.nexskill.org/cert/nasscom-ai-2026',
+  },
+  {
+    id: 'cred-3',
+    title: 'Enterprise Backend Microservices Badge',
+    issuer: 'NexSkill Technical Committee',
+    issueDate: 'Jan 2026',
+    verified: true,
+    credentialUrl: 'https://credentials.nexskill.org/cert/microservices-2026',
+  },
+];
+
+// 1. Get Progress Telemetry (Supports GET /progress and GET /progress/student/:studentId)
 router.get(
-  '/student/:studentId',
+  ['/', '/student', '/student/:studentId'],
   asyncHandler(async (req, res) => {
-    const { studentId } = req.params;
+    const studentId = req.params.studentId || req.user?.id || 'demo-student';
 
     const progressData = {
       studentId,
-      overallReadiness: 78,
+      overallProgress: 82,
+      overallReadiness: 82,
       readinessCategory: 'Job Ready (Accelerated Track)',
       completedModulesCount: 14,
       totalModulesCount: 18,
-      verifiedBadgesCount: 6,
+      verifiedBadgesCount: storedCredentials.length,
       weeklyStudyHours: 18.5,
       skillProficiencyScore: 84,
       targetRole: 'Full-Stack AI Developer',
+      credentials: storedCredentials,
+      skillProgress: [
+        { skill: 'React 19 & Modern State', progress: 92, level: 'Advanced' },
+        { skill: 'Node.js Microservices', progress: 88, level: 'Advanced' },
+        { skill: 'AI & LangChain RAG', progress: 85, level: 'Advanced' },
+        { skill: 'Docker & Kubernetes', progress: 74, level: 'Intermediate' },
+        { skill: 'PostgreSQL & Databases', progress: 70, level: 'Intermediate' },
+      ],
       radarMetrics: [
         { subject: 'System Design', value: 80, fullMark: 100 },
         { subject: 'Frontend React', value: 92, fullMark: 100 },
@@ -37,6 +74,26 @@ router.get(
 
     return res.status(200).json(
       new ApiResponse(200, progressData, 'Student progress and credential tracker data retrieved')
+    );
+  })
+);
+
+// 1b. Add New Credential
+router.post(
+  '/credentials',
+  asyncHandler(async (req, res) => {
+    const { title, issuer, issueDate, credentialUrl } = req.body;
+    const newCredential = {
+      id: `cred-${Date.now()}`,
+      title: title || 'Verified Professional Credential',
+      issuer: issuer || 'NexSkill Industry Partner',
+      issueDate: issueDate || new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+      verified: true,
+      credentialUrl: credentialUrl || '',
+    };
+    storedCredentials.unshift(newCredential);
+    return res.status(201).json(
+      new ApiResponse(201, { credential: newCredential, credentials: storedCredentials }, 'Credential added successfully')
     );
   })
 );

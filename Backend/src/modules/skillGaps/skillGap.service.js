@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import StudentSkill from '../skillProfiles/skillProfile.model.js';
 import Skill from '../skills/skill.model.js';
 import ApiError from '../../utils/ApiError.js';
@@ -49,8 +50,11 @@ export const ROLE_BENCHMARKS = {
 export const calculateSkillGap = async (studentId, targetRole = 'Software Engineer') => {
   const benchmarkSkills = ROLE_BENCHMARKS[targetRole] || ROLE_BENCHMARKS['Software Engineer'];
 
-  // Fetch student's existing skills
-  const studentSkills = await StudentSkill.find({ student: studentId }).populate('skill');
+  // Fetch student's existing skills safely
+  let studentSkills = [];
+  if (studentId && mongoose.isValidObjectId(studentId)) {
+    studentSkills = await StudentSkill.find({ student: studentId }).populate('skill');
+  }
 
   const studentSkillMap = new Map();
   studentSkills.forEach((item) => {

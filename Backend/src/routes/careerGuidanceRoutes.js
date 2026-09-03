@@ -4,60 +4,73 @@ import ApiResponse from '../utils/ApiResponse.js';
 
 const router = Router();
 
+// Career Tracks Data
+const defaultCareerTracks = [
+  {
+    id: 'track-1',
+    title: 'Cloud & Distributed Systems Architect',
+    domain: 'Cloud Computing',
+    demand: 'Very High (96/100)',
+    avgSalary: '₹22 - 36 LPA',
+    description: 'Design robust, resilient, multi-region cloud infrastructures using Kubernetes, Terraform, and cloud-native services.',
+    matchScore: 88,
+    stages: [
+      { stage: 1, title: 'Linux & Networking Internals', duration: '3 weeks', detail: 'Socket programming, kernel tuning, eBPF basics' },
+      { stage: 2, title: 'Containerization & K8s Cluster Ops', duration: '4 weeks', detail: 'Helm, Ingress controllers, Service mesh' },
+      { stage: 3, title: 'Infrastructure as Code & CI/CD', duration: '3 weeks', detail: 'Terraform modules, GitHub Actions, ArgoCD' },
+      { stage: 4, title: 'Distributed Reliability & FinOps', duration: '4 weeks', detail: 'Chaos engineering, Prometheus, OpenTelemetry' },
+    ],
+  },
+  {
+    id: 'track-2',
+    title: 'Frontier AI & Autonomous Systems Engineer',
+    domain: 'Artificial Intelligence',
+    demand: 'Hypergrowth (99/100)',
+    avgSalary: '₹24 - 42 LPA',
+    description: 'Build production-ready LLM pipelines, autonomous multi-agent swarms, and high-performance vector retrieval architectures.',
+    matchScore: 92,
+    stages: [
+      { stage: 1, title: 'Deep Learning & Vector Mathematics', duration: '4 weeks', detail: 'Embeddings, attention mechanics, PyTorch' },
+      { stage: 2, title: 'RAG & Vector Database Systems', duration: '3 weeks', detail: 'Qdrant, Pinecone, hybrid search strategies' },
+      { stage: 3, title: 'Autonomous Multi-Agent Swarms', duration: '4 weeks', detail: 'CrewAI, LangGraph, tool-calling pipelines' },
+      { stage: 4, title: 'LLMOps & High-Throughput Inference', duration: '3 weeks', detail: 'vLLM, TensorRT-LLM, model quantization' },
+    ],
+  },
+  {
+    id: 'track-3',
+    title: 'Full-Stack Product Architect',
+    domain: 'Full Stack Engineering',
+    demand: 'High (91/100)',
+    avgSalary: '₹18 - 30 LPA',
+    description: 'End-to-end full-stack modern architecture with React 19, Node.js, distributed databases, and security best practices.',
+    matchScore: 85,
+    stages: [
+      { stage: 1, title: 'Modern React Architecture & RSC', duration: '3 weeks', detail: 'React Server Components, Next.js App Router, Tailwind' },
+      { stage: 2, title: 'Microservices & Async Message Queues', duration: '4 weeks', detail: 'Node.js, Kafka, Redis caching, gRPC' },
+      { stage: 3, title: 'Security, Auth & Compliance', duration: '3 weeks', detail: 'OAuth2.0, JWT, RBAC, Data Protection standards' },
+      { stage: 4, title: 'Production Scaling & Performance', duration: '3 weeks', detail: 'Edge compute, CDN caching, database sharding' },
+    ],
+  },
+];
+
 // 1. Get Career Tracks / Pathways
 router.get(
   '/tracks',
   asyncHandler(async (req, res) => {
-    const tracks = [
-      {
-        id: 'track-1',
-        title: 'Cloud & Distributed Systems Architect',
-        domain: 'Cloud Computing',
-        demand: 'Very High (96/100)',
-        avgSalary: '₹22 - 36 LPA',
-        description: 'Design robust, resilient, multi-region cloud infrastructures using Kubernetes, Terraform, and cloud-native services.',
-        matchScore: 88,
-        stages: [
-          { stage: 1, title: 'Linux & Networking Internals', duration: '3 weeks', detail: 'Socket programming, kernel tuning, eBPF basics' },
-          { stage: 2, title: 'Containerization & K8s Cluster Ops', duration: '4 weeks', detail: 'Helm, Ingress controllers, Service mesh' },
-          { stage: 3, title: 'Infrastructure as Code & CI/CD', duration: '3 weeks', detail: 'Terraform modules, GitHub Actions, ArgoCD' },
-          { stage: 4, title: 'Distributed Reliability & FinOps', duration: '4 weeks', detail: 'Chaos engineering, Prometheus, OpenTelemetry' },
-        ],
-      },
-      {
-        id: 'track-2',
-        title: 'Frontier AI & Autonomous Systems Engineer',
-        domain: 'Artificial Intelligence',
-        demand: 'Hypergrowth (99/100)',
-        avgSalary: '₹24 - 42 LPA',
-        description: 'Build production-ready LLM pipelines, autonomous multi-agent swarms, and high-performance vector retrieval architectures.',
-        matchScore: 92,
-        stages: [
-          { stage: 1, title: 'Deep Learning & Vector Mathematics', duration: '4 weeks', detail: 'Embeddings, attention mechanics, PyTorch' },
-          { stage: 2, title: 'RAG & Vector Database Systems', duration: '3 weeks', detail: 'Qdrant, Pinecone, hybrid search strategies' },
-          { stage: 3, title: 'Autonomous Multi-Agent Swarms', duration: '4 weeks', detail: 'CrewAI, LangGraph, tool-calling pipelines' },
-          { stage: 4, title: 'LLMOps & High-Throughput Inference', duration: '3 weeks', detail: 'vLLM, TensorRT-LLM, model quantization' },
-        ],
-      },
-      {
-        id: 'track-3',
-        title: 'Full-Stack Product Architect',
-        domain: 'Full Stack Engineering',
-        demand: 'High (91/100)',
-        avgSalary: '₹18 - 30 LPA',
-        description: 'End-to-end full-stack modern architecture with React 19, Node.js, distributed databases, and security best practices.',
-        matchScore: 85,
-        stages: [
-          { stage: 1, title: 'Modern React Architecture & RSC', duration: '3 weeks', detail: 'React Server Components, Next.js App Router, Tailwind' },
-          { stage: 2, title: 'Microservices & Async Message Queues', duration: '4 weeks', detail: 'Node.js, Kafka, Redis caching, gRPC' },
-          { stage: 3, title: 'Security, Auth & Compliance', duration: '3 weeks', detail: 'OAuth2.0, JWT, RBAC, Data Protection standards' },
-          { stage: 4, title: 'Production Scaling & Performance', duration: '3 weeks', detail: 'Edge compute, CDN caching, database sharding' },
-        ],
-      },
-    ];
-
     return res.status(200).json(
-      new ApiResponse(200, tracks, 'Career tracks retrieved successfully')
+      new ApiResponse(200, defaultCareerTracks, 'Career tracks retrieved successfully')
+    );
+  })
+);
+
+// 1b. Get Single Career Track by ID
+router.get(
+  '/tracks/:id',
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const track = defaultCareerTracks.find((t) => t.id === id) || defaultCareerTracks[0];
+    return res.status(200).json(
+      new ApiResponse(200, track, 'Career track retrieved successfully')
     );
   })
 );

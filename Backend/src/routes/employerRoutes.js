@@ -178,4 +178,23 @@ router.get(
   })
 );
 
+// 5b. Post Job Requirement
+router.post(
+  '/jobs',
+  asyncHandler(async (req, res) => {
+    const newJob = {
+      id: `job-${Date.now()}`,
+      title: req.body.title || 'New Job Listing',
+      company: req.body.company || 'NexSkill Industry Partner',
+      location: req.body.location || 'Remote, India',
+      applicants: 0,
+      createdAt: new Date().toISOString(),
+      ...req.body,
+    };
+    return res.status(201).json(
+      new ApiResponse(201, { job: newJob }, 'Job requirement posted successfully')
+    );
+  })
+);
+
 export default router;
