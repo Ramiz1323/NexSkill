@@ -36,7 +36,7 @@ export const TRAINER_PROGRAM_TYPES = Object.freeze({
   UPSKILLING: 'Faculty Upskilling',
   CERTIFICATION: 'Industry Certification',
   WEBINAR: 'Webinar & Masterclass',
-  MENTORSHIP: 'Hackathon Mentorship',
+  MENTORSHIP: 'Industry Mentorship',
 });
 
 export const EXPERIENCE_LEVELS = Object.freeze({

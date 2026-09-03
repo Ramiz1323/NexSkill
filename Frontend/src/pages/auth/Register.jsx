@@ -59,7 +59,7 @@ const Register = () => {
   return (
     <Card
       title="Create NexSkill Account"
-      subtitle="Join the SIH 2026 Skill Alignment Ecosystem"
+      subtitle="Join the Next-Gen Skill Alignment Platform"
       badge="Free Access"
       className="shadow-xl bg-white border border-slate-200"
     >

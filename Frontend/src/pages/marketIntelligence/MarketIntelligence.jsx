@@ -70,7 +70,7 @@ export default function MarketIntelligence() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-indigo text-xs font-bold mb-2">
             <TrendingUp className="w-3.5 h-3.5" />
-            <span>Module 1: Real-Time Labour Market Intelligence</span>
+            <span>Real-Time Labour Market Intelligence</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             Labour Market Intelligence & Demand Signals

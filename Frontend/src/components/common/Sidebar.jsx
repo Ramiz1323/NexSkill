@@ -26,31 +26,31 @@ const Sidebar = () => {
     {
       title: 'MARKET SIGNALS',
       items: [
-        { name: 'Labour Intelligence', path: '/market-intelligence', icon: TrendingUp, mod: 'M1' },
-        { name: 'Demand Forecasting', path: '/demand-forecasting', icon: LineChart, mod: 'M7' },
+        { name: 'Labour Intelligence', path: '/market-intelligence', icon: TrendingUp },
+        { name: 'Demand Forecasting', path: '/demand-forecasting', icon: LineChart },
       ],
     },
     {
       title: 'DIAGNOSTICS & CREDENTIALS',
       items: [
         { name: 'Live Skill Assessment', path: '/assessment', icon: Sparkles, badge: 'Live' },
-        { name: 'AI Resume Analyzer', path: '/resume-analyzer', icon: FileCheck2, mod: 'M3' },
-        { name: 'Credential Tracker', path: '/credential-tracker', icon: Award, mod: 'M4' },
+        { name: 'AI Resume Analyzer', path: '/resume-analyzer', icon: FileCheck2 },
+        { name: 'Credential Tracker', path: '/credential-tracker', icon: Award },
       ],
     },
     {
       title: 'ADAPTIVE CURRICULUM',
       items: [
-        { name: 'Industry Curriculum', path: '/industry-curriculum', icon: BookOpenCheck, mod: 'M2' },
-        { name: 'Dynamic Feedback & Path', path: '/dynamic-curriculum', icon: GitMerge, mod: 'M6' },
+        { name: 'Industry Curriculum', path: '/industry-curriculum', icon: BookOpenCheck },
+        { name: 'Dynamic Feedback & Path', path: '/dynamic-curriculum', icon: GitMerge },
       ],
     },
     {
       title: 'WORKFORCE & PLACEMENT',
       items: [
-        { name: 'Employer Discovery', path: '/employer-discovery', icon: Building2, mod: 'M5' },
-        { name: 'AI Career Guidance', path: '/career-guidance', icon: Compass, mod: 'M8' },
-        { name: 'Trainer Development', path: '/trainer-development', icon: GraduationCap, mod: 'M9' },
+        { name: 'Employer Discovery', path: '/employer-discovery', icon: Building2 },
+        { name: 'AI Career Guidance', path: '/career-guidance', icon: Compass },
+        { name: 'Trainer Development', path: '/trainer-development', icon: GraduationCap },
       ],
     },
   ];
@@ -100,17 +100,6 @@ const Sidebar = () => {
                             {item.badge}
                           </span>
                         )}
-                        {item.mod && !item.badge && (
-                          <span
-                            className={`px-1.5 py-0.5 text-[9px] font-bold rounded-md ${
-                              isActive
-                                ? 'bg-white/20 text-white'
-                                : 'bg-slate-100 text-slate-500 border border-slate-200'
-                            }`}
-                          >
-                            {item.mod}
-                          </span>
-                        )}
                       </>
                     )}
                   </NavLink>
@@ -121,23 +110,23 @@ const Sidebar = () => {
         ))}
       </div>
 
-      {/* SIH Status Card */}
+      {/* Ecosystem Status Card */}
       <div className="mt-4 pt-3 border-t border-slate-200">
         <div className="p-3.5 rounded-2xl bg-indigo-50/50 border border-indigo-100">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-indigo-600 shrink-0" />
             <span className="text-xs font-bold text-slate-900">
-              SIH 2026 Prototype
+              NexSkill Engine
             </span>
           </div>
           <p className="text-[11px] text-slate-600 mt-1 leading-tight">
-            Problem Statement 26134: Skill Development Alignment Engine.
+            Skill Development & Alignment Platform.
           </p>
           <div className="mt-2.5 flex items-center justify-between text-[10px] text-indigo-600 font-semibold">
             <span>9 Ecosystem Pillars</span>
             <span className="flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-              Connected
+              Active
             </span>
           </div>
         </div>
