@@ -1,13 +1,13 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from '../components/common/Navbar';
-import Footer from '../components/common/Footer';
+ import Footer from '../components/common/Footer';
 
 const MainLayout = () => {
   return (
-    <div className="main-layout flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-500 selection:text-white">
       <Navbar />
-      <main className="flex-1 p-4">
+      <main className="flex-1 w-full">
         <Outlet />
       </main>
       <Footer />
@@ -16,3 +16,4 @@ const MainLayout = () => {
 };
 
 export default MainLayout;
+

@@ -46,9 +46,6 @@ const initialState = {
   emergingRoles: [],
   automationIndex: [],
   forecastHorizon: '5Y',
-import { createSlice } from '@reduxjs/toolkit';
-
-const initialState = {
   forecasts: [],
   emergingSkills: [],
   loading: false,
@@ -64,6 +61,22 @@ const demandSlice = createSlice({
     },
     clearDemandErrors: (state) => {
       state.error = null;
+    },
+    setDemandData: (state, action) => {
+      state.forecasts = action.payload.forecasts || [];
+      state.emergingSkills = action.payload.emergingSkills || [];
+      state.projections = action.payload.projections || [];
+      state.emergingRoles = action.payload.emergingRoles || [];
+      state.automationIndex = action.payload.automationIndex || [];
+      state.loading = false;
+      state.error = null;
+    },
+    setDemandLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+    setDemandError: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
     },
   },
   extraReducers: (builder) => {
@@ -112,23 +125,12 @@ const demandSlice = createSlice({
   },
 });
 
-export const { setForecastHorizon, clearDemandErrors } = demandSlice.actions;
+export const {
+  setForecastHorizon,
+  clearDemandErrors,
+  setDemandData,
+  setDemandLoading,
+  setDemandError,
+} = demandSlice.actions;
 
-    setDemandData: (state, action) => {
-      state.forecasts = action.payload.forecasts || [];
-      state.emergingSkills = action.payload.emergingSkills || [];
-      state.loading = false;
-      state.error = null;
-    },
-    setDemandLoading: (state, action) => {
-      state.loading = action.payload;
-    },
-    setDemandError: (state, action) => {
-      state.error = action.payload;
-      state.loading = false;
-    },
-  },
-});
-
-export const { setDemandData, setDemandLoading, setDemandError } = demandSlice.actions;
 export default demandSlice.reducer;
