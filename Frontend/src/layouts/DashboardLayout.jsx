@@ -6,7 +6,7 @@ import Footer from '../components/common/Footer';
 
 const DashboardLayout = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-indigo-500 selection:text-white">
+    <div className="flex flex-col min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-500 selection:text-white">
       <Navbar />
       <div className="flex flex-1 max-w-7xl w-full mx-auto">
         <Sidebar />
@@ -20,4 +20,3 @@ const DashboardLayout = () => {
 };
 
 export default DashboardLayout;
-

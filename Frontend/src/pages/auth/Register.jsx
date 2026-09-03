@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { User, Mail, Lock, UserCheck, AlertCircle, Sparkles } from 'lucide-react';
 import { registerUser, clearAuthError } from '../../redux/slices/authSlice';
- import Button from '../../components/common/Button';
+import Button from '../../components/common/Button';
 import Card from '../../components/common/Card';
 
 const Register = () => {
@@ -61,18 +61,18 @@ const Register = () => {
       title="Create NexSkill Account"
       subtitle="Join the SIH 2026 Skill Alignment Ecosystem"
       badge="Free Access"
-      className="shadow-2xl"
+      className="shadow-xl bg-white border border-slate-200"
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {(validationError || error) && (
-          <div className="p-3 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 rounded-xl text-xs flex items-center gap-2">
+          <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
             <span>{validationError || error}</span>
           </div>
         )}
 
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="name" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+        <div className="flex flex-col gap-1.5 text-left">
+          <label htmlFor="name" className="text-xs font-bold text-slate-700">
             Full Name
           </label>
           <div className="relative flex items-center">
@@ -84,14 +84,14 @@ const Register = () => {
               value={formData.name}
               onChange={handleChange}
               placeholder="e.g. Aarav Sharma"
-              className="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all"
+              className="w-full pl-9 pr-4 py-2.5 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:bg-white text-slate-900 placeholder-slate-400 outline-none transition-all shadow-sm"
               required
             />
           </div>
         </div>
 
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="email" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+        <div className="flex flex-col gap-1.5 text-left">
+          <label htmlFor="email" className="text-xs font-bold text-slate-700">
             Email Address
           </label>
           <div className="relative flex items-center">
@@ -103,14 +103,14 @@ const Register = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="e.g. aarav@college.edu.in"
-              className="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all"
+              className="w-full pl-9 pr-4 py-2.5 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:bg-white text-slate-900 placeholder-slate-400 outline-none transition-all shadow-sm"
               required
             />
           </div>
         </div>
 
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="password" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+        <div className="flex flex-col gap-1.5 text-left">
+          <label htmlFor="password" className="text-xs font-bold text-slate-700">
             Password
           </label>
           <div className="relative flex items-center">
@@ -122,14 +122,14 @@ const Register = () => {
               value={formData.password}
               onChange={handleChange}
               placeholder="Create a password (min 6 chars)"
-              className="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all"
+              className="w-full pl-9 pr-4 py-2.5 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:bg-white text-slate-900 placeholder-slate-400 outline-none transition-all shadow-sm"
               required
             />
           </div>
         </div>
 
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="role" className="text-xs font-bold text-slate-700 dark:text-slate-300">
+        <div className="flex flex-col gap-1.5 text-left">
+          <label htmlFor="role" className="text-xs font-bold text-slate-700">
             Select Your Primary Role
           </label>
           <div className="relative flex items-center">
@@ -139,7 +139,7 @@ const Register = () => {
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all"
+              className="w-full pl-9 pr-4 py-2.5 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:bg-white text-slate-900 outline-none transition-all shadow-sm cursor-pointer"
             >
               <option value="student">Student / Job Seeker</option>
               <option value="employer">Employer / Recruiter</option>
@@ -158,9 +158,9 @@ const Register = () => {
           Create Candidate Profile
         </Button>
 
-        <div className="text-center mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500">
+        <div className="text-center mt-3 pt-3 border-t border-slate-100 text-xs text-slate-500">
           Already registered?{' '}
-          <Link to="/login" className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">
+          <Link to="/login" className="text-indigo-600 font-bold hover:underline">
             Sign In here
           </Link>
         </div>
@@ -170,4 +170,3 @@ const Register = () => {
 };
 
 export default Register;
-

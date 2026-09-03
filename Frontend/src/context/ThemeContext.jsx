@@ -4,16 +4,12 @@ const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('nexskill_theme') || 'light';
+    return 'light';
   });
 
   useEffect(() => {
-    localStorage.setItem('nexskill_theme', theme);
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    localStorage.setItem('nexskill_theme', 'light');
+    document.documentElement.classList.remove('dark');
   }, [theme]);
 
   const toggleTheme = () => {

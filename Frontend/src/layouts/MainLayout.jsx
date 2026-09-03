@@ -5,7 +5,7 @@ import Navbar from '../components/common/Navbar';
 
 const MainLayout = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 selection:bg-indigo-500 selection:text-white">
+    <div className="flex flex-col min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-500 selection:text-white">
       <Navbar />
       <main className="flex-1 w-full">
         <Outlet />

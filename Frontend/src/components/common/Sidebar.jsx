@@ -39,7 +39,6 @@ const Sidebar = () => {
         { name: 'Credential Tracker', path: '/credential-tracker', icon: Award, mod: 'M4' },
       ],
     },
-
     {
       title: 'ADAPTIVE CURRICULUM',
       items: [
@@ -58,12 +57,12 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="glass-sidebar w-72 p-4 flex flex-col justify-between shrink-0 min-h-[calc(100vh-4rem)] border-r border-slate-200/80 dark:border-slate-800">
+    <aside className="w-72 p-4 flex flex-col justify-between shrink-0 min-h-[calc(100vh-4rem)] bg-white border-r border-slate-200">
       {/* Navigation Groups */}
       <div className="flex flex-col gap-5 overflow-y-auto pr-1">
         {navSections.map((section, idx) => (
           <div key={idx}>
-            <h3 className="text-[10px] font-extrabold tracking-wider text-slate-400 dark:text-slate-500 uppercase px-3 mb-1.5">
+            <h3 className="text-[10px] font-extrabold tracking-wider text-slate-400 uppercase px-3 mb-1.5">
               {section.title}
             </h3>
             <div className="flex flex-col gap-0.5">
@@ -76,8 +75,8 @@ const Sidebar = () => {
                     className={({ isActive }) =>
                       `group flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
                         isActive
-                          ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-sm shadow-indigo-500/25 font-bold'
-                          : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/70 hover:text-slate-900 dark:hover:text-slate-100'
+                          ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-500/25 font-bold'
+                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                       }`
                     }
                   >
@@ -86,7 +85,7 @@ const Sidebar = () => {
                         <div className="flex items-center gap-2.5">
                           <Icon
                             className={`w-4 h-4 transition-transform group-hover:scale-110 ${
-                              isActive ? 'text-white' : 'text-slate-400 dark:text-slate-500 group-hover:text-indigo-600 dark:group-hover:text-indigo-400'
+                              isActive ? 'text-white' : 'text-slate-400 group-hover:text-indigo-600'
                             }`}
                           />
                           <span>{item.name}</span>
@@ -96,7 +95,7 @@ const Sidebar = () => {
                             className={`px-1.5 py-0.5 text-[9px] font-bold rounded-md uppercase ${
                               isActive
                                 ? 'bg-white/20 text-white'
-                                : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
+                                : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                             }`}
                           >
                             {item.badge}
@@ -107,7 +106,7 @@ const Sidebar = () => {
                             className={`px-1.5 py-0.5 text-[9px] font-bold rounded-md ${
                               isActive
                                 ? 'bg-white/20 text-white'
-                                : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-400'
+                                : 'bg-slate-100 text-slate-500 border border-slate-200'
                             }`}
                           >
                             {item.mod}
@@ -124,18 +123,18 @@ const Sidebar = () => {
       </div>
 
       {/* SIH Status Card */}
-      <div className="mt-4 pt-3 border-t border-slate-200/80 dark:border-slate-800/80">
-        <div className="p-3 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-cyan-500/5 to-transparent border border-indigo-200/50 dark:border-indigo-900/40">
+      <div className="mt-4 pt-3 border-t border-slate-200">
+        <div className="p-3.5 rounded-2xl bg-indigo-50/50 border border-indigo-100">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
-            <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+            <ShieldCheck className="w-4 h-4 text-indigo-600 shrink-0" />
+            <span className="text-xs font-bold text-slate-900">
               SIH 2026 Prototype
             </span>
           </div>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-tight">
+          <p className="text-[11px] text-slate-600 mt-1 leading-tight">
             Problem Statement 26134: Skill Development Alignment Engine.
           </p>
-          <div className="mt-2.5 flex items-center justify-between text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold">
+          <div className="mt-2.5 flex items-center justify-between text-[10px] text-indigo-600 font-semibold">
             <span>9 Ecosystem Pillars</span>
             <span className="flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
@@ -149,4 +148,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-
