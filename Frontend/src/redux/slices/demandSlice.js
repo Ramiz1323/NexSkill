@@ -132,6 +132,7 @@ export const {
   setDemandLoading,
   setDemandError,
 } = demandSlice.actions;
+export const { setForecastHorizon, clearDemandErrors } = demandSlice.actions;
 
 export default demandSlice.reducer;
 
