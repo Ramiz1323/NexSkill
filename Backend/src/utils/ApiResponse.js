@@ -1,3 +1,6 @@
+/**
+ * Standardized API Response structure
+ */
 export class ApiResponse {
   constructor(statusCode, data, message = 'Success') {
     this.statusCode = statusCode;

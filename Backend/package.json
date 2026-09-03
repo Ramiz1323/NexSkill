@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "seed": "node src/database/seeders/seedAll.js"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +21,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.9.4",
     "multer": "^2.3.0"
+    "mongoose": "^8.9.5"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
