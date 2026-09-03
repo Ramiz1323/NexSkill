@@ -61,7 +61,6 @@ import { aiRoutes } from '../modules/ai/index.js';
 import { analyticsRoutes } from '../modules/analytics/index.js';
 import healthRoutes from './health.routes.js';
 
-const router = Router();
 
 // Health check
 router.use('/', healthRoutes);
