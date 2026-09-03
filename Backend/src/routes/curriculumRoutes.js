@@ -2,6 +2,7 @@ import { Router } from 'express';
 import asyncHandler from '../utils/asyncHandler.js';
 import ApiResponse from '../utils/ApiResponse.js';
 import curriculumService from '../services/curriculumService.js';
+import moduleCurriculumRoutes from '../modules/curriculum/curriculum.routes.js';
 
 const router = Router();
 
@@ -50,5 +51,8 @@ router.post(
     return res.status(201).json(new ApiResponse(201, feedback, 'Feedback received and recorded'));
   })
 );
+
+// Mount CRUD operations from curriculum module
+router.use('/', moduleCurriculumRoutes);
 
 export default router;

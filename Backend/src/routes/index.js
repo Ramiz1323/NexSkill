@@ -52,7 +52,6 @@ import { jobRoutes } from '../modules/jobs/index.js';
 import { applicationRoutes } from '../modules/applications/index.js';
 import { placementRoutes } from '../modules/placement/index.js';
 import { courseRoutes } from '../modules/courses/index.js';
-import { curriculumRoutes } from '../modules/curriculum/index.js';
 import { roadmapRoutes } from '../modules/roadmap/index.js';
 import { learningRoutes } from '../modules/learning/index.js';
 import { labourMarketRoutes } from '../modules/labourMarket/index.js';
@@ -73,7 +72,6 @@ router.use('/placement', placementRoutes);
 
 // Phase 7: Courses, Curriculum, Roadmap, Learning
 router.use('/courses', courseRoutes);
-router.use('/curriculum', curriculumRoutes);
 router.use('/roadmap', roadmapRoutes);
 router.use('/learning', learningRoutes);
 

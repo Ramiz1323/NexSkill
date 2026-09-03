@@ -1,8 +1,3 @@
-<<<<<<<<< Temporary merge branch 1
-export const getPaginationOptions = (query) => {
-  const page = Math.max(1, parseInt(query.page, 10) || 1);
-  const limit = Math.min(100, Math.max(1, parseInt(query.limit, 10) || 10));
-=========
 /**
  * Pagination helper for MongoDB queries
  * @param {Object} queryParams - { page, limit }
@@ -11,47 +6,51 @@ export const getPaginationOptions = (query) => {
 export const getPagination = (queryParams = {}) => {
   const page = Math.max(1, parseInt(queryParams.page, 10) || 1);
   const limit = Math.min(100, Math.max(1, parseInt(queryParams.limit, 10) || 10));
->>>>>>>>> Temporary merge branch 2
   const skip = (page - 1) * limit;
 
   return { page, limit, skip };
 };
 
-<<<<<<<<< Temporary merge branch 1
-export const formatPaginatedResponse = ({ data, total, page, limit }) => {
-  const totalPages = Math.ceil(total / limit);
+export const getPaginationOptions = getPagination;
 
-  return {
-    items: data,
-    pagination: {
-      totalItems: total,
-      totalPages,
-      currentPage: page,
-      limit,
-      hasNextPage: page < totalPages,
-      hasPrevPage: page > 1,
-=========
 /**
  * Format paginated result structure
  */
-export const formatPaginatedResponse = (items, total, page, limit) => {
+export const formatPaginatedResponse = (arg1, total, page, limit) => {
+  let items = arg1;
+  let tot = total;
+  let pg = page;
+  let lim = limit;
+
+  // Support object input format: { data: [...], total, page, limit }
+  if (arg1 && typeof arg1 === 'object' && !Array.isArray(arg1) && 'data' in arg1) {
+    items = arg1.data;
+    tot = arg1.total;
+    pg = arg1.page;
+    lim = arg1.limit;
+  }
+
+  const pages = Math.ceil(tot / lim) || 1;
+
   return {
     items,
+    data: items,
     pagination: {
-      total,
-      page,
-      limit,
-      pages: Math.ceil(total / limit) || 1,
->>>>>>>>> Temporary merge branch 2
+      total: tot,
+      totalItems: tot,
+      page: pg,
+      currentPage: pg,
+      limit: lim,
+      pages,
+      totalPages: pages,
+      hasNextPage: pg < pages,
+      hasPrevPage: pg > 1,
     },
   };
 };
 
-<<<<<<<<< Temporary merge branch 1
 export default {
+  getPagination,
   getPaginationOptions,
   formatPaginatedResponse,
 };
-=========
-export default { getPagination, formatPaginatedResponse };
->>>>>>>>> Temporary merge branch 2
