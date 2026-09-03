@@ -18,7 +18,8 @@ import {
   Zap,
   Target,
   Clock,
-  Layers
+  Layers,
+  Sparkles
 } from 'lucide-react';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
