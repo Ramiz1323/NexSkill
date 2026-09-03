@@ -14,8 +14,7 @@ const Footer = () => {
           <div>
             <span className="font-bold text-slate-900 text-sm tracking-tight">NexSkill</span>
             <span className="mx-2 text-slate-300">|</span>
-            <span className="text-indigo-600 font-semibold">Smart India Hackathon 2026</span>
-            <span className="hidden sm:inline text-slate-500 ml-1.5">(PS 26134)</span>
+            <span className="text-indigo-600 font-semibold">AI Skill Alignment Platform</span>
           </div>
         </div>
 

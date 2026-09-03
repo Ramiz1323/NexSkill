@@ -114,7 +114,7 @@ const AiCareerGuidance = () => {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-indigo text-xs font-bold mb-2">
             <Compass className="w-3.5 h-3.5" />
-            <span>Module 8: AI Career Guidance & Roadmap Simulation</span>
+            <span>AI Career Guidance & Roadmap Simulation</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             AI Career Pathway Navigator

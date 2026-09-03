@@ -23,8 +23,9 @@ export const getTrainerProgramByIdApi = async (programId) => {
  * @param {string|Object} programData
  */
 export const enrollTrainerInProgramApi = async (programData) => {
-  const id = typeof programData === 'string' ? programData : programData.programId;
-  const response = await axiosClient.post(`/trainer/programs/${id}/enroll`, programData);
+  const id = typeof programData === 'string' ? programData : programData?.programId || programData?.id;
+  const payload = typeof programData === 'object' && programData !== null ? programData : { programId: id };
+  const response = await axiosClient.post(`/trainer/programs/${id}/enroll`, payload);
   return response.data || response;
 };
 

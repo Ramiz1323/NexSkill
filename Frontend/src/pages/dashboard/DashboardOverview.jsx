@@ -47,15 +47,15 @@ const DashboardOverview = () => {
   }, [dispatch]);
 
   const quickLaunchPillars = [
-    { title: 'Labour Intelligence', path: '/market-intelligence', icon: TrendingUp, mod: 'M1', status: 'Live Analytics' },
-    { title: 'Industry Curriculum', path: '/industry-curriculum', icon: BookOpenCheck, mod: 'M2', status: 'Co-Designed' },
-    { title: 'ATS Resume Scanner', path: '/resume-analyzer', icon: FileCheck2, mod: 'M3', status: 'AI Diagnostics' },
-    { title: 'Credential Tracker', path: '/credential-tracker', icon: Award, mod: 'M4', status: 'Verifiable' },
-    { title: 'Employer Discovery', path: '/employer-discovery', icon: Building2, mod: 'M5', status: 'Recruitment' },
-    { title: 'Dynamic Learning Path', path: '/dynamic-curriculum', icon: GitMerge, mod: 'M6', status: 'Adaptive' },
-    { title: 'Demand Forecasting', path: '/demand-forecasting', icon: LineChart, mod: 'M7', status: 'Predictive' },
-    { title: 'AI Career Guidance', path: '/career-guidance', icon: Compass, mod: 'M8', status: 'Roadmap' },
-    { title: 'Trainer Development', path: '/trainer-development', icon: GraduationCap, mod: 'M9', status: 'Faculty Upskill' },
+    { title: 'Labour Intelligence', path: '/market-intelligence', icon: TrendingUp, status: 'Live Analytics' },
+    { title: 'Industry Curriculum', path: '/industry-curriculum', icon: BookOpenCheck, status: 'Co-Designed' },
+    { title: 'ATS Resume Scanner', path: '/resume-analyzer', icon: FileCheck2, status: 'AI Diagnostics' },
+    { title: 'Credential Tracker', path: '/credential-tracker', icon: Award, status: 'Verifiable' },
+    { title: 'Employer Discovery', path: '/employer-discovery', icon: Building2, status: 'Recruitment' },
+    { title: 'Dynamic Learning Path', path: '/dynamic-curriculum', icon: GitMerge, status: 'Adaptive' },
+    { title: 'Demand Forecasting', path: '/demand-forecasting', icon: LineChart, status: 'Predictive' },
+    { title: 'AI Career Guidance', path: '/career-guidance', icon: Compass, status: 'Roadmap' },
+    { title: 'Trainer Development', path: '/trainer-development', icon: GraduationCap, status: 'Faculty Upskill' },
   ];
 
   const isLoading = resumeLoading || progressLoading || marketLoading;
@@ -67,6 +67,10 @@ const DashboardOverview = () => {
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none" />
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative z-10">
           <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold mb-3 backdrop-blur-md border border-white/20">
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span>AI-Powered Executive Command Center</span>
+            </div>
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white">
               Welcome, {user?.name || user?.email?.split('@')[0] || 'Candidate'}!
             </h1>
@@ -245,7 +249,7 @@ const DashboardOverview = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-5 sm:mb-6 border-b border-slate-100">
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 block mb-1">
-              COMPLETE SIH 2026 ECOSYSTEM
+              COMPLETE PLATFORM ECOSYSTEM
             </span>
             <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900">
               9 Connected Solution Pillars Launchpad
@@ -274,6 +278,9 @@ const DashboardOverview = () => {
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="text-xs font-mono font-bold text-indigo-500">{p.mod}</span>
                       <h3 className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors truncate">
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <h3 className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
                         {p.title}
                       </h3>
                     </div>
