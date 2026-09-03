@@ -2,41 +2,19 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
   getTrainerProgramsApi,
   getTrainerProgramByIdApi,
-  enrollTrainerInProgramApi,
   enrollTrainerProgramApi,
   getTrainerCertificationsApi,
 } from '../../api/trainerDevApi';
 
 export const fetchTrainerPrograms = createAsyncThunk(
   'trainer/fetchTrainerPrograms',
-  async (params, { rejectWithValue }) => {
-    try {
-      const data = await getTrainerProgramsApi(params);
-      return data;
-    } catch (err) {
-      return rejectWithValue(
-        err.response?.data?.message || err.message || 'Failed to fetch trainer upskilling programs.'
-      );
-    }
-  }
-);
-
-export const enrollTrainer = createAsyncThunk(
-  'trainer/enrollTrainer',
-  async (enrollmentData, { rejectWithValue }) => {
-    try {
-      const data = await enrollTrainerInProgramApi(enrollmentData);
-      return data;
-    } catch (err) {
-      return rejectWithValue(
-        err.response?.data?.message || err.message || 'Failed to enroll in trainer program.'
   async (filters = {}, { rejectWithValue }) => {
     try {
       const data = await getTrainerProgramsApi(filters);
       return data;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || err.message || 'Failed to fetch trainer programs'
+        err.response?.data?.message || err.message || 'Failed to fetch trainer upskilling programs.'
       );
     }
   }
@@ -56,19 +34,22 @@ export const fetchTrainerProgramDetails = createAsyncThunk(
   }
 );
 
-export const enrollTrainerProgram = createAsyncThunk(
-  'trainer/enrollTrainerProgram',
-  async (programId, { rejectWithValue }) => {
+export const enrollTrainer = createAsyncThunk(
+  'trainer/enrollTrainer',
+  async (enrollmentData, { rejectWithValue }) => {
     try {
-      const data = await enrollTrainerProgramApi(programId);
+      const data = await enrollTrainerProgramApi(enrollmentData);
+      const programId = typeof enrollmentData === 'string' ? enrollmentData : enrollmentData.programId;
       return { programId, data };
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || err.message || 'Failed to enroll in trainer program'
+        err.response?.data?.message || err.message || 'Failed to enroll in trainer program.'
       );
     }
   }
 );
+
+export const enrollTrainerProgram = enrollTrainer;
 
 export const fetchTrainerCertifications = createAsyncThunk(
   'trainer/fetchTrainerCertifications',
@@ -103,17 +84,15 @@ const trainerSlice = createSlice({
   name: 'trainer',
   initialState,
   reducers: {
-    clearTrainerError: (state) => {
-      state.error = null;
-    },
-    setSelectedProgram: (state, action) => {
-      state.selectedProgram = action.payload;
-    },
     setTrainerData: (state, action) => {
       state.programs = action.payload.programs || action.payload || [];
       state.selectedProgram = action.payload.selectedProgram || null;
       state.loading = false;
       state.error = null;
+    },
+    setSelectedProgram: (state, action) => {
+      state.selectedProgram = action.payload;
+    },
     setTrainerFilters: (state, action) => {
       state.filters = { ...state.filters, ...action.payload };
     },
@@ -161,26 +140,31 @@ const trainerSlice = createSlice({
         state.actionLoading = false;
         state.error = action.payload;
       })
-      // enrollTrainerProgram
-      .addCase(enrollTrainerProgram.pending, (state) => {
+      // enrollTrainer
+      .addCase(enrollTrainer.pending, (state) => {
         state.actionLoading = true;
         state.error = null;
       })
-      .addCase(enrollTrainerProgram.fulfilled, (state, action) => {
+      .addCase(enrollTrainer.fulfilled, (state, action) => {
         state.actionLoading = false;
-        const { programId, data } = action.payload;
-        const enrolledItem = data.program || { id: programId, enrolledAt: new Date().toISOString() };
-        if (!state.enrolledPrograms.some((p) => (p.id === programId || p._id === programId))) {
-          state.enrolledPrograms.push(enrolledItem);
-        }
-        state.programs = state.programs.map((p) =>
-          (p._id === programId || p.id === programId) ? { ...p, isEnrolled: true } : p
-        );
-        if (state.selectedProgram && (state.selectedProgram._id === programId || state.selectedProgram.id === programId)) {
-          state.selectedProgram.isEnrolled = true;
+        const { programId, data } = action.payload || {};
+        if (programId) {
+          const enrolledItem = data?.program || { id: programId, enrolledAt: new Date().toISOString() };
+          if (!state.enrolledPrograms.some((p) => p.id === programId || p._id === programId)) {
+            state.enrolledPrograms.push(enrolledItem);
+          }
+          state.programs = state.programs.map((p) =>
+            p._id === programId || p.id === programId ? { ...p, isEnrolled: true } : p
+          );
+          if (
+            state.selectedProgram &&
+            (state.selectedProgram._id === programId || state.selectedProgram.id === programId)
+          ) {
+            state.selectedProgram.isEnrolled = true;
+          }
         }
       })
-      .addCase(enrollTrainerProgram.rejected, (state, action) => {
+      .addCase(enrollTrainer.rejected, (state, action) => {
         state.actionLoading = false;
         state.error = action.payload;
       })
@@ -190,40 +174,11 @@ const trainerSlice = createSlice({
         state.certifications = Array.isArray(payload) ? payload : payload.certifications || [];
       });
   },
-  extraReducers: (builder) => {
-    builder
-      // fetchTrainerPrograms
-      .addCase(fetchTrainerPrograms.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchTrainerPrograms.fulfilled, (state, action) => {
-        state.loading = false;
-        state.programs = Array.isArray(action.payload)
-          ? action.payload
-          : action.payload.programs || [];
-      })
-      .addCase(fetchTrainerPrograms.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      // enrollTrainer
-      .addCase(enrollTrainer.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(enrollTrainer.fulfilled, (state, action) => {
-        state.loading = false;
-      })
-      .addCase(enrollTrainer.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
-  },
 });
 
-export const { clearTrainerError, setSelectedProgram, setTrainerData } = trainerSlice.actions;
 export const {
+  setTrainerData,
+  setSelectedProgram,
   setTrainerFilters,
   clearTrainerFilters,
   clearSelectedProgram,
@@ -241,4 +196,3 @@ export const selectTrainerActionLoading = (state) => state.trainer.actionLoading
 export const selectTrainerError = (state) => state.trainer.error;
 
 export default trainerSlice.reducer;
-

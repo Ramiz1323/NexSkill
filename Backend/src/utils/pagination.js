@@ -1,8 +1,3 @@
-<<<<<<<<< Temporary merge branch 1
-export const getPaginationOptions = (query) => {
-  const page = Math.max(1, parseInt(query.page, 10) || 1);
-  const limit = Math.min(100, Math.max(1, parseInt(query.limit, 10) || 10));
-=========
 /**
  * Pagination helper for MongoDB queries
  * @param {Object} queryParams - { page, limit }
@@ -11,47 +6,41 @@ export const getPaginationOptions = (query) => {
 export const getPagination = (queryParams = {}) => {
   const page = Math.max(1, parseInt(queryParams.page, 10) || 1);
   const limit = Math.min(100, Math.max(1, parseInt(queryParams.limit, 10) || 10));
->>>>>>>>> Temporary merge branch 2
   const skip = (page - 1) * limit;
 
   return { page, limit, skip };
 };
 
-<<<<<<<<< Temporary merge branch 1
-export const formatPaginatedResponse = ({ data, total, page, limit }) => {
-  const totalPages = Math.ceil(total / limit);
+export const getPaginationOptions = getPagination;
 
-  return {
-    items: data,
-    pagination: {
-      totalItems: total,
-      totalPages,
-      currentPage: page,
-      limit,
-      hasNextPage: page < totalPages,
-      hasPrevPage: page > 1,
-=========
 /**
  * Format paginated result structure
  */
 export const formatPaginatedResponse = (items, total, page, limit) => {
+  const actualItems = Array.isArray(items) ? items : items?.data || [];
+  const actualTotal = total !== undefined ? total : items?.total || actualItems.length;
+  const actualPage = page || items?.page || 1;
+  const actualLimit = limit || items?.limit || 10;
+  const totalPages = Math.ceil(actualTotal / actualLimit) || 1;
+
   return {
-    items,
+    items: actualItems,
     pagination: {
-      total,
-      page,
-      limit,
-      pages: Math.ceil(total / limit) || 1,
->>>>>>>>> Temporary merge branch 2
+      total: actualTotal,
+      totalItems: actualTotal,
+      page: actualPage,
+      currentPage: actualPage,
+      limit: actualLimit,
+      pages: totalPages,
+      totalPages,
+      hasNextPage: actualPage < totalPages,
+      hasPrevPage: actualPage > 1,
     },
   };
 };
 
-<<<<<<<<< Temporary merge branch 1
 export default {
+  getPagination,
   getPaginationOptions,
   formatPaginatedResponse,
 };
-=========
-export default { getPagination, formatPaginatedResponse };
->>>>>>>>> Temporary merge branch 2
