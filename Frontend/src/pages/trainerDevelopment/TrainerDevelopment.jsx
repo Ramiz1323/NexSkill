@@ -1,130 +1,3 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  GraduationCap,
-  Sparkles,
-  Users,
-  CheckCircle2,
-  Calendar,
-  Inbox
-} from 'lucide-react';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
-import Loader from '../../components/common/Loader';
-import { fetchTrainerPrograms, enrollTrainer } from '../../redux/slices/trainerSlice';
-
-export default function TrainerDevelopment() {
-  const dispatch = useDispatch();
-  const { programs = [], loading, error } = useSelector((state) => state.trainer);
-
-  useEffect(() => {
-    dispatch(fetchTrainerPrograms());
-  }, [dispatch]);
-
-  const handleEnroll = (programId) => {
-    dispatch(enrollTrainer({ programId }));
-  };
-
-  return (
-    <div className="flex flex-col gap-6 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-4 border-b border-slate-200/80 dark:border-slate-800">
-        <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-indigo text-xs font-bold mb-2">
-            <GraduationCap className="w-3.5 h-3.5" />
-            <span>Module 9: Industry-Driven Trainer Development</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Train-the-Trainer Faculty Development Hub
-          </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Empowering college professors and vocational instructors with cutting-edge industry training and pedagogy certifications.
-          </p>
-        </div>
-        <Button variant="accent" icon={Sparkles}>
-          + Register Faculty Cohort
-        </Button>
-      </div>
-
-      {/* Loading state */}
-      {loading && <Loader message="Loading faculty development programs from backend..." />}
-
-      {/* Error banner */}
-      {error && (
-        <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-xs">
-          <strong>Error loading trainer programs: </strong> {error}
-        </div>
-      )}
-
-      {/* Empty State */}
-      {!loading && !error && programs.length === 0 && (
-        <div className="glass-panel p-12 rounded-3xl text-center flex flex-col items-center">
-          <Inbox className="w-12 h-12 text-slate-400 mb-3" />
-          <h3 className="text-base font-bold text-slate-900 dark:text-white">
-            No Faculty Training Cohorts Scheduled
-          </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mt-1">
-            Industry immersion programs and pedagogy benchmarks will load dynamically from the backend API.
-          </p>
-        </div>
-      )}
-
-      {/* Program Cards Grid */}
-      {!loading && programs.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {programs.map((prog) => (
-            <Card
-              key={prog.id || prog._id}
-              title={prog.title}
-              subtitle={prog.partner || prog.organization || 'Industry Partner'}
-              badge={prog.status || 'Active'}
-            >
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center justify-between text-xs text-slate-500 pb-2 border-b border-slate-100 dark:border-slate-800">
-                  {prog.duration && (
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5" /> {prog.duration}
-                    </span>
-                  )}
-                  {prog.enrolledTrainers !== undefined && (
-                    <span className="flex items-center gap-1">
-                      <Users className="w-3.5 h-3.5" /> {prog.enrolledTrainers} Faculty
-                    </span>
-                  )}
-                </div>
-
-                {prog.topics && prog.topics.length > 0 && (
-                  <div>
-                    <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1.5">
-                      Core Curriculum Modules
-                    </span>
-                    <div className="flex flex-col gap-1.5">
-                      {prog.topics.map((t, idx) => (
-                        <div key={idx} className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-300">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                          <span>{t}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400">
-                    {prog.pedagogyBenchmark || 'Industry Standard'}
-                  </span>
-                  <Button size="sm" variant="primary" onClick={() => handleEnroll(prog.id || prog._id)}>
-                    Enroll Faculty
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -210,67 +83,74 @@ const TrainerDevelopment = () => {
   };
 
   return (
-    <div className="trainer-development-container p-6 space-y-8">
+    <div className="p-6 space-y-8 max-w-7xl mx-auto">
       {/* Header */}
-      <header className="trainer-dev-header">
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <GraduationCap size={24} /> Industry-Driven Trainer Development
-        </h1>
-        <p className="text-sm text-gray-500">
-          Faculty upskilling programs, industry certification tracks, and pedagogy bootcamps aligned to job market demand.
-        </p>
+      <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-indigo text-xs font-bold mb-2">
+            <GraduationCap className="w-3.5 h-3.5" />
+            <span>Module 9: Industry-Driven Trainer Development</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Train-the-Trainer Faculty Development Hub
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Faculty upskilling programs, industry certification tracks, and pedagogy bootcamps aligned to job market demand.
+          </p>
+        </div>
       </header>
 
       {/* Error Banner */}
       {error && (
-        <div className="error-banner p-4 border border-red-300 bg-red-50 text-red-700 rounded flex justify-between items-center">
+        <div className="p-4 border border-rose-200 bg-rose-50 text-rose-700 rounded-2xl flex justify-between items-center text-xs">
           <span>{error}</span>
-          <Button variant="secondary" onClick={() => dispatch(clearTrainerError())}>
+          <Button variant="secondary" size="sm" onClick={() => dispatch(clearTrainerError())}>
             Dismiss
           </Button>
         </div>
       )}
 
       {/* Filter Bar */}
-      <Card className="filter-card p-4 space-y-4">
+      <Card className="p-4 space-y-4">
         <form onSubmit={handleSearchSubmit} className="flex gap-2">
           <input
             type="text"
             placeholder="Search programs by tech stack or topic (e.g. AI, Cloud, Embedded Systems)..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="w-full p-2 border rounded text-sm"
+            className="w-full p-2.5 border border-slate-200 rounded-xl text-xs bg-slate-50 focus:bg-white text-slate-900"
           />
-          <Button type="submit" variant="primary" className="flex items-center gap-1">
-            <Search size={16} /> Search
+          <Button type="submit" variant="primary" size="sm" className="flex items-center gap-1">
+            <Search size={14} /> Search
           </Button>
         </form>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
           {/* Category Filter */}
           <div>
-            <label className="block text-xs font-semibold mb-1">Program Type</label>
+            <label className="block text-xs font-semibold mb-1 text-slate-700">Program Type</label>
             <select
               value={filters.category}
               onChange={handleCategoryChange}
-              className="w-full p-2 border rounded text-sm"
+              className="w-full p-2 border border-slate-200 rounded-xl text-xs bg-slate-50 focus:bg-white text-slate-900"
             >
               <option value="">All Program Types</option>
-              {Object.entries(TRAINER_PROGRAM_TYPES).map(([key, label]) => (
-                <option key={key} value={label}>
-                  {label}
-                </option>
-              ))}
+              {TRAINER_PROGRAM_TYPES &&
+                Object.entries(TRAINER_PROGRAM_TYPES).map(([key, label]) => (
+                  <option key={key} value={label}>
+                    {label}
+                  </option>
+                ))}
             </select>
           </div>
 
           {/* Delivery Mode Filter */}
           <div>
-            <label className="block text-xs font-semibold mb-1">Delivery Mode</label>
+            <label className="block text-xs font-semibold mb-1 text-slate-700">Delivery Mode</label>
             <select
               value={filters.mode}
               onChange={handleModeChange}
-              className="w-full p-2 border rounded text-sm"
+              className="w-full p-2 border border-slate-200 rounded-xl text-xs bg-slate-50 focus:bg-white text-slate-900"
             >
               <option value="">All Delivery Modes</option>
               <option value="Online">Online / Self-Paced</option>
@@ -283,20 +163,21 @@ const TrainerDevelopment = () => {
           <div>
             <Button
               variant="secondary"
+              size="sm"
               onClick={handleResetFilters}
               className="w-full flex items-center justify-center gap-1"
             >
-              <RotateCcw size={16} /> Reset Filters
+              <RotateCcw size={14} /> Reset Filters
             </Button>
           </div>
         </div>
       </Card>
 
       {/* Program Catalog Grid */}
-      <section className="programs-catalog-section space-y-4">
+      <section className="space-y-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-lg font-bold">Available Faculty Upskilling Programs</h2>
-          <span className="text-xs text-gray-500">
+          <h2 className="text-lg font-bold text-slate-900">Available Faculty Upskilling Programs</h2>
+          <span className="text-xs text-slate-500 font-semibold">
             Showing {programs.length} program{programs.length === 1 ? '' : 's'}
           </span>
         </div>
@@ -305,17 +186,17 @@ const TrainerDevelopment = () => {
           <Loader message="Loading industry programs..." />
         ) : programs.length === 0 ? (
           <Card className="p-8 text-center space-y-2">
-            <BookOpen size={32} className="mx-auto text-gray-400" />
-            <h3 className="text-md font-semibold">No programs found</h3>
-            <p className="text-xs text-gray-500">
+            <BookOpen size={32} className="mx-auto text-slate-400" />
+            <h3 className="text-md font-semibold text-slate-800">No programs found</h3>
+            <p className="text-xs text-slate-500">
               Try adjusting your search criteria or delivery mode filters.
             </p>
-            <Button variant="secondary" onClick={handleResetFilters}>
+            <Button variant="secondary" size="sm" onClick={handleResetFilters}>
               Reset Filters
             </Button>
           </Card>
         ) : (
-          <div className="programs-grid grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {programs.map((program) => {
               const programId = program._id || program.id;
               const isEnrolled =
@@ -325,29 +206,29 @@ const TrainerDevelopment = () => {
               return (
                 <Card
                   key={programId}
-                  className="program-card p-4 border rounded space-y-3 flex flex-col justify-between"
+                  className="p-5 border border-slate-200 rounded-2xl space-y-3 flex flex-col justify-between hover:shadow-md transition-all"
                 >
                   <div className="space-y-2">
                     <div className="flex justify-between items-start">
-                      <span className="badge px-2 py-0.5 text-xs font-bold border rounded">
+                      <span className="badge-indigo px-2.5 py-0.5 text-xs font-bold rounded-lg">
                         {program.category || 'Upskilling'}
                       </span>
                       {program.mode && (
-                        <span className="text-xs text-gray-500 font-semibold">{program.mode}</span>
+                        <span className="text-xs text-slate-500 font-semibold">{program.mode}</span>
                       )}
                     </div>
 
-                    <h3 className="font-bold text-base">{program.title}</h3>
+                    <h3 className="font-bold text-base text-slate-900">{program.title}</h3>
 
                     {program.partner && (
-                      <p className="text-xs text-gray-500 flex items-center gap-1">
+                      <p className="text-xs text-slate-500 flex items-center gap-1">
                         <Building size={14} /> Partner: <strong>{program.partner}</strong>
                       </p>
                     )}
 
-                    <p className="text-xs text-gray-600 dark:text-gray-300">{program.description}</p>
+                    <p className="text-xs text-slate-600 leading-relaxed">{program.description}</p>
 
-                    <div className="meta-details text-xs space-y-1 text-gray-500 pt-2 border-t">
+                    <div className="meta-details text-xs space-y-1 text-slate-500 pt-2 border-t border-slate-100">
                       {program.duration && (
                         <div className="flex items-center gap-1">
                           <Clock size={12} /> Duration: {program.duration}
@@ -362,9 +243,10 @@ const TrainerDevelopment = () => {
                   </div>
 
                   {/* Program Card Actions */}
-                  <div className="card-actions flex gap-2 pt-3 border-t">
+                  <div className="flex gap-2 pt-3 border-t border-slate-100">
                     <Button
                       variant="secondary"
+                      size="sm"
                       onClick={() => handleViewProgram(programId)}
                       className="flex-1 text-xs"
                     >
@@ -372,6 +254,7 @@ const TrainerDevelopment = () => {
                     </Button>
                     <Button
                       variant="primary"
+                      size="sm"
                       disabled={isEnrolled || actionLoading}
                       onClick={() => handleEnroll(programId)}
                       className="flex-1 text-xs flex items-center justify-center gap-1"
@@ -393,25 +276,25 @@ const TrainerDevelopment = () => {
       </section>
 
       {/* Enrolled Programs & Certification Tracker Section */}
-      <section className="enrolled-and-certifications-section grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Enrolled Programs */}
-        <Card className="p-4 space-y-3">
-          <h3 className="font-bold text-base flex items-center gap-2">
-            <BookOpen size={18} /> My Enrolled Programs ({enrolledPrograms.length})
+        <Card className="p-5 space-y-3">
+          <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
+            <BookOpen size={18} className="text-indigo-600" /> My Enrolled Programs ({enrolledPrograms.length})
           </h3>
           {enrolledPrograms.length === 0 ? (
-            <p className="text-xs text-gray-400 py-4">
+            <p className="text-xs text-slate-400 py-4">
               You are not currently enrolled in any faculty upskilling cohorts.
             </p>
           ) : (
-            <div className="enrolled-list space-y-2">
+            <div className="space-y-2">
               {enrolledPrograms.map((item, idx) => (
-                <div key={idx} className="enrolled-item p-2 border rounded text-xs flex justify-between items-center">
+                <div key={idx} className="p-3 border border-slate-200 bg-slate-50 rounded-xl text-xs flex justify-between items-center">
                   <div>
-                    <strong>{item.title || `Program #${item.id || item._id || idx + 1}`}</strong>
-                    <p className="text-gray-400">Status: In Progress</p>
+                    <strong className="text-slate-900">{item.title || `Program #${item.id || item._id || idx + 1}`}</strong>
+                    <p className="text-slate-500 mt-0.5">Status: In Progress</p>
                   </div>
-                  <span className="badge px-2 py-0.5 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded text-2xs">
+                  <span className="badge-emerald px-2.5 py-0.5 rounded-full text-xs font-bold">
                     Active
                   </span>
                 </div>
@@ -421,23 +304,23 @@ const TrainerDevelopment = () => {
         </Card>
 
         {/* Industry Certifications */}
-        <Card className="p-4 space-y-3">
-          <h3 className="font-bold text-base flex items-center gap-2">
-            <Award size={18} /> Faculty Industry Certifications ({certifications.length})
+        <Card className="p-5 space-y-3">
+          <h3 className="font-bold text-base text-slate-900 flex items-center gap-2">
+            <Award size={18} className="text-amber-500" /> Faculty Industry Certifications ({certifications.length})
           </h3>
           {certifications.length === 0 ? (
-            <p className="text-xs text-gray-400 py-4">
+            <p className="text-xs text-slate-400 py-4">
               No certifications logged. Complete an accredited industry program to earn recognized credentials.
             </p>
           ) : (
-            <div className="cert-list space-y-2">
+            <div className="space-y-2">
               {certifications.map((cert, idx) => (
-                <div key={idx} className="cert-item p-2 border rounded text-xs flex justify-between items-center">
+                <div key={idx} className="p-3 border border-slate-200 bg-slate-50 rounded-xl text-xs flex justify-between items-center">
                   <div>
-                    <strong>{cert.name || cert.title}</strong>
-                    <p className="text-gray-400">Issued by: {cert.issuer || 'Industry Partner'}</p>
+                    <strong className="text-slate-900">{cert.name || cert.title}</strong>
+                    <p className="text-slate-500 mt-0.5">Issued by: {cert.issuer || 'Industry Partner'}</p>
                   </div>
-                  <span className="badge px-2 py-0.5 border rounded text-2xs">
+                  <span className="badge-indigo px-2.5 py-0.5 rounded-full text-xs font-bold">
                     {cert.status || 'Verified'}
                   </span>
                 </div>
@@ -454,28 +337,28 @@ const TrainerDevelopment = () => {
           onClose={() => dispatch(clearSelectedProgram())}
           title={selectedProgram.title || 'Program Syllabus & Details'}
         >
-          <div className="program-modal-content space-y-4 text-xs">
+          <div className="space-y-4 text-xs">
             {actionLoading && <Loader message="Loading syllabus..." />}
 
             <div>
-              <p className="font-semibold text-sm">{selectedProgram.category}</p>
+              <p className="font-semibold text-sm text-indigo-600">{selectedProgram.category}</p>
               {selectedProgram.partner && (
-                <p className="text-gray-500">Industry Partner: {selectedProgram.partner}</p>
+                <p className="text-slate-500">Industry Partner: {selectedProgram.partner}</p>
               )}
             </div>
 
             {selectedProgram.description && (
               <div>
-                <strong>Program Overview:</strong>
-                <p className="text-gray-600 dark:text-gray-300 mt-1">{selectedProgram.description}</p>
+                <strong className="text-slate-800">Program Overview:</strong>
+                <p className="text-slate-600 mt-1">{selectedProgram.description}</p>
               </div>
             )}
 
             {/* Syllabus Topics */}
             {selectedProgram.syllabus && selectedProgram.syllabus.length > 0 && (
-              <div className="syllabus-section">
-                <strong>Curriculum & Learning Modules:</strong>
-                <ul className="list-disc pl-4 space-y-1 mt-1 text-gray-600 dark:text-gray-300">
+              <div>
+                <strong className="text-slate-800">Curriculum & Learning Modules:</strong>
+                <ul className="list-disc pl-4 space-y-1 mt-1 text-slate-600">
                   {selectedProgram.syllabus.map((topic, idx) => (
                     <li key={idx}>{topic}</li>
                   ))}
@@ -486,18 +369,19 @@ const TrainerDevelopment = () => {
             {/* Prerequisites */}
             {selectedProgram.prerequisites && (
               <div>
-                <strong>Prerequisites:</strong>
-                <p className="text-gray-500 mt-1">{selectedProgram.prerequisites}</p>
+                <strong className="text-slate-800">Prerequisites:</strong>
+                <p className="text-slate-500 mt-1">{selectedProgram.prerequisites}</p>
               </div>
             )}
 
             {/* Modal Actions */}
-            <div className="modal-actions pt-3 border-t flex justify-end gap-2">
-              <Button variant="secondary" onClick={() => dispatch(clearSelectedProgram())}>
+            <div className="pt-3 border-t border-slate-100 flex justify-end gap-2">
+              <Button variant="secondary" size="sm" onClick={() => dispatch(clearSelectedProgram())}>
                 Close
               </Button>
               <Button
                 variant="primary"
+                size="sm"
                 disabled={
                   selectedProgram.isEnrolled ||
                   enrolledPrograms.some(

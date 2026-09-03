@@ -1,173 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  Building2,
-  Search,
-  CheckCircle2,
-  Award,
-  Sparkles,
-  Inbox
-} from 'lucide-react';
-import Card from '../../components/common/Card';
-import Button from '../../components/common/Button';
-import Loader from '../../components/common/Loader';
-import { fetchCandidates } from '../../redux/slices/employerSlice';
-
-export default function EmployerDiscovery() {
-  const dispatch = useDispatch();
-  const { candidates = [], loading, error } = useSelector((state) => state.employer);
-
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedRole, setSelectedRole] = useState('All');
-
-  useEffect(() => {
-    dispatch(fetchCandidates());
-  }, [dispatch]);
-
-  const filteredCandidates = candidates.filter((c) => {
-    const matchesSearch =
-      c.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.role?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.skills?.some((s) => s.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesRole = selectedRole === 'All' || c.role?.includes(selectedRole);
-    return matchesSearch && matchesRole;
-  });
-
-  return (
-    <div className="flex flex-col gap-6 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-4 border-b border-slate-200/80 dark:border-slate-800">
-        <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-indigo text-xs font-bold mb-2">
-            <Building2 className="w-3.5 h-3.5" />
-            <span>Module 5: Employer Discovery & Direct Matchmaking</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Vetted Talent Discovery Panel
-          </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Browse verified job-ready candidates whose skill gaps have been remediated through industry-aligned curricula.
-          </p>
-        </div>
-        <Button variant="accent" icon={Sparkles}>
-          + Post Job Requirement
-        </Button>
-      </div>
-
-      {/* Filter Bar */}
-      <div className="glass-panel p-4 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-2 w-full md:w-96 relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 pointer-events-none" />
-          <input
-            type="text"
-            placeholder="Search candidates by skill, name, or location..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-xs rounded-xl bg-slate-100 dark:bg-slate-800 border border-transparent focus:border-indigo-500 outline-none"
-          />
-        </div>
-        <div className="flex items-center gap-3 w-full md:w-auto">
-          <span className="text-xs font-semibold text-slate-500">Filter Role:</span>
-          <select
-            value={selectedRole}
-            onChange={(e) => setSelectedRole(e.target.value)}
-            className="px-3 py-1.5 text-xs rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 outline-none"
-          >
-            <option value="All">All Roles</option>
-            <option value="Full-Stack">Full-Stack Cloud</option>
-            <option value="AI/ML">AI / Machine Learning</option>
-            <option value="DevOps">DevOps & SRE</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Loading state */}
-      {loading && <Loader message="Fetching verified candidate pool from backend..." />}
-
-      {/* Error banner */}
-      {error && (
-        <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-xs">
-          <strong>Error loading candidates: </strong> {error}
-        </div>
-      )}
-
-      {/* Empty State */}
-      {!loading && !error && filteredCandidates.length === 0 && (
-        <div className="glass-panel p-12 rounded-3xl text-center flex flex-col items-center">
-          <Inbox className="w-12 h-12 text-slate-400 mb-3" />
-          <h3 className="text-base font-bold text-slate-900 dark:text-white">
-            No Candidate Records Found
-          </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mt-1">
-            Candidates registered and evaluated through the ATS and Dynamic Learning engines will appear here.
-          </p>
-        </div>
-      )}
-
-      {/* Candidate Cards Grid */}
-      {!loading && filteredCandidates.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filteredCandidates.map((candidate) => (
-            <Card
-              key={candidate.id || candidate._id}
-              title={candidate.name}
-              subtitle={candidate.location || 'Location Not Specified'}
-              badge={candidate.matchScore ? `${candidate.matchScore}% Match` : 'Verified'}
-              action={
-                candidate.atsScore ? (
-                  <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-600 font-bold text-xs">
-                    {candidate.atsScore}%
-                  </div>
-                ) : null
-              }
-            >
-              <div className="flex flex-col gap-3">
-                <div>
-                  <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 block">
-                    {candidate.role || 'General Tech Candidate'}
-                  </span>
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-0.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                    {candidate.readinessLevel || 'Assessed & Verified'}
-                  </span>
-                </div>
-
-                {candidate.skills && candidate.skills.length > 0 && (
-                  <div>
-                    <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1.5">
-                      Verified Skill Proficiencies
-                    </span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {candidate.skills.map((skill) => (
-                        <span
-                          key={skill}
-                          className="px-2 py-0.5 rounded-md text-[11px] font-medium badge-indigo"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                  <span className="text-xs text-slate-500 flex items-center gap-1">
-                    <Award className="w-3.5 h-3.5 text-amber-500" />
-                    {candidate.verifiedBadges || 0} Credentials
-                  </span>
-                  <Button size="sm" variant="primary">
-                    Schedule Interview
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchCandidates,
@@ -214,6 +45,7 @@ import {
   MapPin,
   RotateCcw,
   Check,
+  Building2,
 } from 'lucide-react';
 
 const EmployerDiscovery = () => {
@@ -296,59 +128,67 @@ const EmployerDiscovery = () => {
   };
 
   return (
-    <div className="employer-discovery-container p-6 space-y-6">
+    <div className="p-6 space-y-6 max-w-7xl mx-auto">
       {/* Header Section */}
-      <header className="employer-discovery-header">
-        <h1 className="text-2xl font-bold">Employer Discovery Panel</h1>
-        <p className="text-sm text-gray-500">
-          Source job-ready talent matching industry demands and verified AI skill readiness scores.
-        </p>
+      <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-indigo text-xs font-bold mb-2">
+            <Building2 className="w-3.5 h-3.5" />
+            <span>Module 5: Employer Discovery Panel</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Vetted Talent Discovery Panel
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Source job-ready talent matching industry demands and verified AI skill readiness scores.
+          </p>
+        </div>
       </header>
 
       {/* Error Alert */}
       {error && (
-        <div className="error-banner p-4 border border-red-300 bg-red-50 text-red-700 rounded flex justify-between items-center">
+        <div className="p-4 border border-rose-200 bg-rose-50 text-rose-700 rounded-2xl flex justify-between items-center text-xs">
           <span>{error}</span>
-          <Button variant="secondary" onClick={() => dispatch(clearEmployerError())}>
+          <Button variant="secondary" size="sm" onClick={() => dispatch(clearEmployerError())}>
             Dismiss
           </Button>
         </div>
       )}
 
       {/* Search & Filter Controls */}
-      <Card className="filter-controls-card p-4 space-y-4">
-        <div className="search-bar flex gap-2 items-center">
-          <Search size={18} />
+      <Card className="p-4 space-y-4">
+        <div className="flex gap-2 items-center">
+          <Search size={16} className="text-slate-400" />
           <input
             type="text"
             placeholder="Search candidates by title, keyword, or name..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="w-full p-2 border rounded"
+            className="w-full p-2.5 border border-slate-200 rounded-xl text-xs bg-slate-50 focus:bg-white text-slate-900"
           />
         </div>
 
-        <div className="filters-row grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
           {/* Skill Tag Input */}
-          <div className="skill-filter">
-            <label className="block text-xs font-semibold mb-1">Required Skills</label>
+          <div>
+            <label className="block text-xs font-semibold mb-1 text-slate-700">Required Skills</label>
             <form onSubmit={handleSkillAdd} className="flex gap-2">
               <input
                 type="text"
                 placeholder="Add skill (e.g. React, Python)"
                 value={skillInput}
                 onChange={(e) => setSkillInput(e.target.value)}
-                className="w-full p-2 border rounded text-sm"
+                className="w-full p-2 border border-slate-200 rounded-xl text-xs bg-slate-50 focus:bg-white text-slate-900"
               />
-              <Button type="submit" variant="secondary">
+              <Button type="submit" variant="secondary" size="sm">
                 Add
               </Button>
             </form>
           </div>
 
           {/* Min Match Score Filter */}
-          <div className="min-score-filter">
-            <label className="block text-xs font-semibold mb-1">
+          <div>
+            <label className="block text-xs font-semibold mb-1 text-slate-700">
               Min Match Score: {filters.minScore}%
             </label>
             <input
@@ -363,47 +203,52 @@ const EmployerDiscovery = () => {
           </div>
 
           {/* Experience Level */}
-          <div className="experience-filter">
-            <label className="block text-xs font-semibold mb-1">Experience Level</label>
+          <div>
+            <label className="block text-xs font-semibold mb-1 text-slate-700">Experience Level</label>
             <select
               value={filters.experienceLevel}
               onChange={handleExperienceChange}
-              className="w-full p-2 border rounded text-sm"
+              className="w-full p-2 border border-slate-200 rounded-xl text-xs bg-slate-50 focus:bg-white text-slate-900"
             >
               <option value="">All Experience Levels</option>
-              <option value={EXPERIENCE_LEVELS.ENTRY}>Entry Level</option>
-              <option value={EXPERIENCE_LEVELS.MID}>Mid Level</option>
-              <option value={EXPERIENCE_LEVELS.SENIOR}>Senior Level</option>
-              <option value={EXPERIENCE_LEVELS.LEAD}>Lead / Executive</option>
+              {EXPERIENCE_LEVELS && (
+                <>
+                  <option value={EXPERIENCE_LEVELS.ENTRY}>Entry Level</option>
+                  <option value={EXPERIENCE_LEVELS.MID}>Mid Level</option>
+                  <option value={EXPERIENCE_LEVELS.SENIOR}>Senior Level</option>
+                  <option value={EXPERIENCE_LEVELS.LEAD}>Lead / Executive</option>
+                </>
+              )}
             </select>
           </div>
 
           {/* Reset Filters */}
-          <div className="reset-action">
+          <div>
             <Button
               variant="secondary"
+              size="sm"
               onClick={handleResetFilters}
               className="w-full flex items-center justify-center gap-2"
             >
-              <RotateCcw size={16} /> Reset Filters
+              <RotateCcw size={14} /> Reset Filters
             </Button>
           </div>
         </div>
 
         {/* Selected Skill Badges */}
         {filters.skills.length > 0 && (
-          <div className="active-skills flex flex-wrap gap-2 pt-2">
-            <span className="text-xs font-semibold self-center">Active Skills:</span>
+          <div className="flex flex-wrap gap-2 pt-2">
+            <span className="text-xs font-semibold self-center text-slate-600">Active Skills:</span>
             {filters.skills.map((skill) => (
               <span
                 key={skill}
-                className="badge px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded text-xs flex items-center gap-1"
+                className="badge-indigo px-2.5 py-1 rounded-lg text-xs flex items-center gap-1 font-bold"
               >
                 {skill}
                 <button
                   type="button"
                   onClick={() => handleSkillRemove(skill)}
-                  className="font-bold cursor-pointer"
+                  className="font-bold cursor-pointer hover:text-rose-600 ml-1"
                 >
                   ×
                 </button>
@@ -414,7 +259,7 @@ const EmployerDiscovery = () => {
       </Card>
 
       {/* Results Meta */}
-      <div className="results-summary flex justify-between items-center text-sm">
+      <div className="flex justify-between items-center text-xs text-slate-600">
         <span>
           Showing <strong>{candidates.length}</strong> candidate{candidates.length === 1 ? '' : 's'}
           {pagination.total > 0 && ` of ${pagination.total}`}
@@ -425,18 +270,18 @@ const EmployerDiscovery = () => {
       {loading ? (
         <Loader message="Searching candidates across industry talent pool..." />
       ) : candidates.length === 0 ? (
-        <Card className="empty-state-card p-8 text-center space-y-2">
-          <User size={36} className="mx-auto text-gray-400" />
-          <h3 className="text-lg font-semibold">No candidates found</h3>
-          <p className="text-sm text-gray-500">
+        <Card className="p-8 text-center space-y-2">
+          <User size={36} className="mx-auto text-slate-400" />
+          <h3 className="text-lg font-semibold text-slate-800">No candidates found</h3>
+          <p className="text-xs text-slate-500">
             Try adjusting your search criteria, required skills, or match score threshold.
           </p>
-          <Button variant="secondary" onClick={handleResetFilters}>
+          <Button variant="secondary" size="sm" onClick={handleResetFilters}>
             Clear All Filters
           </Button>
         </Card>
       ) : (
-        <div className="candidates-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {candidates.map((candidate) => {
             const candidateId = candidate._id || candidate.id;
             const matchScore = candidate.matchScore ?? candidate.readinessScore ?? 0;
@@ -444,54 +289,55 @@ const EmployerDiscovery = () => {
             return (
               <Card
                 key={candidateId}
-                className="candidate-card p-4 border rounded space-y-3 flex flex-col justify-between"
+                className="p-5 border border-slate-200 rounded-2xl space-y-3 flex flex-col justify-between hover:shadow-md transition-all"
               >
-                <div className="card-top space-y-2">
+                <div className="space-y-2">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h4 className="font-bold text-lg">{candidate.name || 'Candidate'}</h4>
-                      <p className="text-sm text-gray-500 flex items-center gap-1">
-                        <Briefcase size={14} /> {candidate.title || candidate.role || 'Job Ready Candidate'}
+                      <h4 className="font-bold text-base text-slate-900">{candidate.name || 'Candidate'}</h4>
+                      <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+                        <Briefcase size={12} /> {candidate.title || candidate.role || 'Job Ready Candidate'}
                       </p>
                       {candidate.location && (
-                        <p className="text-xs text-gray-400 flex items-center gap-1">
+                        <p className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
                           <MapPin size={12} /> {candidate.location}
                         </p>
                       )}
                     </div>
-                    <span className="match-badge px-2 py-1 text-xs font-bold rounded border">
-                      {formatScore(matchScore)} Match
+                    <span className="badge-emerald px-2 py-0.5 text-xs font-bold rounded-lg">
+                      {formatScore ? formatScore(matchScore) : `${matchScore}%`} Match
                     </span>
                   </div>
 
-                  <div className="experience-and-status text-xs space-y-1">
+                  <div className="text-xs space-y-1 text-slate-600 pt-1">
                     <div>
-                      <strong>Experience:</strong> {formatExperience(candidate.experienceYears ?? candidate.experience)}
+                      <strong>Experience:</strong> {formatExperience ? formatExperience(candidate.experienceYears ?? candidate.experience) : `${candidate.experienceYears || 0} yrs`}
                     </div>
                     <div>
-                      <strong>Status:</strong> {formatCandidateStatus(candidate.status || CANDIDATE_STATUS.NEW)}
+                      <strong>Status:</strong> {formatCandidateStatus ? formatCandidateStatus(candidate.status || CANDIDATE_STATUS?.NEW || 'Active') : (candidate.status || 'Active')}
                     </div>
                   </div>
 
                   {/* Skills tags */}
                   {candidate.skills && candidate.skills.length > 0 && (
-                    <div className="candidate-skills flex flex-wrap gap-1 pt-1">
+                    <div className="flex flex-wrap gap-1 pt-1">
                       {candidate.skills.slice(0, 4).map((skill, idx) => (
-                        <span key={idx} className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
+                        <span key={idx} className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md border border-slate-200 font-medium">
                           {skill}
                         </span>
                       ))}
                       {candidate.skills.length > 4 && (
-                        <span className="text-xs text-gray-400">+{candidate.skills.length - 4} more</span>
+                        <span className="text-[11px] text-slate-400 self-center">+{candidate.skills.length - 4} more</span>
                       )}
                     </div>
                   )}
                 </div>
 
                 {/* Card Actions */}
-                <div className="card-actions flex gap-2 pt-3 border-t">
+                <div className="flex gap-2 pt-3 border-t border-slate-100">
                   <Button
                     variant="primary"
+                    size="sm"
                     onClick={() => handleViewProfile(candidateId)}
                     className="flex-1 text-xs"
                   >
@@ -499,10 +345,11 @@ const EmployerDiscovery = () => {
                   </Button>
                   <Button
                     variant="secondary"
+                    size="sm"
                     onClick={() => handleToggleShortlist(candidateId)}
                     className="text-xs flex items-center gap-1"
                   >
-                    <Bookmark size={14} className={candidate.isShortlisted ? 'fill-current' : ''} />
+                    <Bookmark size={14} className={candidate.isShortlisted ? 'fill-current text-amber-500' : ''} />
                     {candidate.isShortlisted ? 'Saved' : 'Shortlist'}
                   </Button>
                 </div>
@@ -514,17 +361,19 @@ const EmployerDiscovery = () => {
 
       {/* Pagination Controls */}
       {pagination.total > pagination.limit && (
-        <div className="pagination-bar flex justify-center items-center gap-3 pt-4">
+        <div className="flex justify-center items-center gap-3 pt-4 text-xs">
           <Button
             variant="secondary"
+            size="sm"
             disabled={pagination.page <= 1}
             onClick={() => dispatch(setPage(pagination.page - 1))}
           >
             Previous
           </Button>
-          <span className="text-sm font-semibold">Page {pagination.page}</span>
+          <span className="font-semibold text-slate-700">Page {pagination.page}</span>
           <Button
             variant="secondary"
+            size="sm"
             disabled={pagination.page * pagination.limit >= pagination.total}
             onClick={() => dispatch(setPage(pagination.page + 1))}
           >
@@ -540,22 +389,22 @@ const EmployerDiscovery = () => {
           onClose={() => dispatch(clearSelectedCandidate())}
           title={selectedCandidate.name || 'Candidate Profile'}
         >
-          <div className="candidate-detail-body space-y-4">
+          <div className="space-y-4 text-xs">
             {actionLoading && <Loader message="Loading profile details..." />}
 
             <div>
-              <p className="font-semibold text-sm">{selectedCandidate.title || 'Job Ready Candidate'}</p>
+              <p className="font-semibold text-sm text-indigo-600">{selectedCandidate.title || 'Job Ready Candidate'}</p>
               {selectedCandidate.location && (
-                <p className="text-xs text-gray-500">{selectedCandidate.location}</p>
+                <p className="text-slate-500">{selectedCandidate.location}</p>
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-2 text-xs border p-2 rounded">
+            <div className="grid grid-cols-2 gap-2 p-3 bg-slate-50 border border-slate-200 rounded-xl">
               <div>
-                <strong>Match Score:</strong> {formatScore(selectedCandidate.matchScore ?? 0)}
+                <strong>Match Score:</strong> {formatScore ? formatScore(selectedCandidate.matchScore ?? 0) : `${selectedCandidate.matchScore || 0}%`}
               </div>
               <div>
-                <strong>Experience:</strong> {formatExperience(selectedCandidate.experienceYears ?? 0)}
+                <strong>Experience:</strong> {formatExperience ? formatExperience(selectedCandidate.experienceYears ?? 0) : `${selectedCandidate.experienceYears || 0} yrs`}
               </div>
               <div>
                 <strong>Email:</strong> {selectedCandidate.email || 'N/A'}
@@ -566,21 +415,21 @@ const EmployerDiscovery = () => {
             </div>
 
             {selectedCandidate.bio && (
-              <div className="bio-section text-xs">
-                <strong>Summary:</strong>
-                <p className="text-gray-600 dark:text-gray-300 mt-1">{selectedCandidate.bio}</p>
+              <div>
+                <strong className="text-slate-800">Summary:</strong>
+                <p className="text-slate-600 mt-1">{selectedCandidate.bio}</p>
               </div>
             )}
 
             {/* Verified Skills */}
             {selectedCandidate.skills && (
-              <div className="skills-section text-xs">
-                <strong>Verified Skills:</strong>
-                <div className="flex flex-wrap gap-1 mt-1">
+              <div>
+                <strong className="text-slate-800">Verified Skills:</strong>
+                <div className="flex flex-wrap gap-1.5 mt-1">
                   {selectedCandidate.skills.map((skill, idx) => (
                     <span
                       key={idx}
-                      className="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 rounded border flex items-center gap-1"
+                      className="px-2 py-0.5 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-md flex items-center gap-1 font-medium"
                     >
                       <Check size={10} /> {skill}
                     </span>
@@ -590,25 +439,25 @@ const EmployerDiscovery = () => {
             )}
 
             {/* Recruitment Pipeline Status Changer */}
-            <div className="status-changer pt-2 border-t text-xs space-y-1">
-              <label className="font-semibold block">Update Candidate Status:</label>
+            <div className="pt-2 border-t border-slate-100 space-y-1">
+              <label className="font-semibold block text-slate-700">Update Candidate Status:</label>
               <select
-                value={selectedCandidate.status || CANDIDATE_STATUS.NEW}
+                value={selectedCandidate.status || (CANDIDATE_STATUS?.NEW || 'New')}
                 onChange={(e) =>
                   handleStatusChange(
                     selectedCandidate._id || selectedCandidate.id,
                     e.target.value
                   )
                 }
-                className="w-full p-2 border rounded text-xs"
+                className="w-full p-2 border border-slate-200 rounded-xl text-xs bg-slate-50"
               >
-                <option value={CANDIDATE_STATUS.NEW}>New</option>
-                <option value={CANDIDATE_STATUS.SHORTLISTED}>Shortlisted</option>
-                <option value={CANDIDATE_STATUS.CONTACTED}>Contacted</option>
-                <option value={CANDIDATE_STATUS.INTERVIEW_SCHEDULED}>Interview Scheduled</option>
-                <option value={CANDIDATE_STATUS.OFFERED}>Offered</option>
-                <option value={CANDIDATE_STATUS.HIRED}>Hired</option>
-                <option value={CANDIDATE_STATUS.REJECTED}>Rejected</option>
+                <option value="New">New</option>
+                <option value="Shortlisted">Shortlisted</option>
+                <option value="Contacted">Contacted</option>
+                <option value="Interview Scheduled">Interview Scheduled</option>
+                <option value="Offered">Offered</option>
+                <option value="Hired">Hired</option>
+                <option value="Rejected">Rejected</option>
               </select>
             </div>
           </div>

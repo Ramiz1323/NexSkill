@@ -1,13 +1,16 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
+  getCareerRecommendationsApi,
   getCareerTracksApi,
   getCareerPathwayByIdApi,
   generateCustomCareerPathApi,
+  getRoadmapForRoleApi,
+  askCareerAdvisorApi,
 } from '../../api/careerGuidanceApi';
 
 export const fetchCareerTracks = createAsyncThunk(
   'career/fetchCareerTracks',
-  async (params, { rejectWithValue }) => {
+  async (params = {}, { rejectWithValue }) => {
     try {
       const data = await getCareerTracksApi(params);
       return data;
@@ -28,10 +31,10 @@ export const generateCustomCareerPath = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(
         err.response?.data?.message || err.message || 'Failed to generate career pathway.'
-  getCareerRecommendationsApi,
-  getRoadmapForRoleApi,
-  askCareerAdvisorApi,
-} from '../../api/careerGuidanceApi';
+      );
+    }
+  }
+);
 
 export const fetchCareerRecommendations = createAsyncThunk(
   'career/fetchCareerRecommendations',
@@ -61,23 +64,15 @@ export const fetchRoleRoadmap = createAsyncThunk(
   }
 );
 
-export const sendCareerAdvisorMessage = createAsyncThunk(
-  'career/sendCareerAdvisorMessage',
-  async ({ prompt, context = {} }, { dispatch, rejectWithValue }) => {
+export const sendAdvisorMessage = createAsyncThunk(
+  'career/sendAdvisorMessage',
+  async ({ prompt, context }, { rejectWithValue }) => {
     try {
-      // Optimistically record user prompt in chat
-      dispatch(
-        addChatMessage({
-          role: 'user',
-          text: prompt,
-          timestamp: new Date().toISOString(),
-        })
-      );
       const data = await askCareerAdvisorApi(prompt, context);
-      return data;
+      return { prompt, response: data };
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || err.message || 'Failed to get advisor response'
+        err.response?.data?.message || err.message || 'Failed to get response from AI advisor'
       );
     }
   }
@@ -85,17 +80,15 @@ export const sendCareerAdvisorMessage = createAsyncThunk(
 
 const initialState = {
   tracks: [],
-  selectedTrack: null,
   recommendations: [],
-  activeRoadmap: null,
+  selectedRole: null,
+  selectedTrack: null,
+  roadmap: null,
   chatHistory: [],
-  filters: {
-    targetDomain: '',
-    experienceLevel: '',
-  },
+  targetDomain: '',
   loading: false,
-  chatLoading: false,
   roadmapLoading: false,
+  chatLoading: false,
   error: null,
 };
 
@@ -103,87 +96,31 @@ const careerSlice = createSlice({
   name: 'career',
   initialState,
   reducers: {
-    clearCareerError: (state) => {
+    setCareerData: (state, action) => {
+      state.tracks = action.payload.tracks || [];
+      state.selectedTrack = action.payload.selectedTrack || state.tracks[0] || null;
+      state.loading = false;
       state.error = null;
+    },
+    setSelectedRole: (state, action) => {
+      state.selectedRole = action.payload;
     },
     setSelectedTrack: (state, action) => {
       state.selectedTrack = action.payload;
     },
-    setCareerData: (state, action) => {
-      state.tracks = action.payload.tracks || action.payload || [];
-      state.selectedTrack = action.payload.selectedTrack || null;
-      state.loading = false;
-      state.error = null;
-    setCareerFilters: (state, action) => {
-      state.filters = { ...state.filters, ...action.payload };
+    setTargetDomain: (state, action) => {
+      state.targetDomain = action.payload;
     },
-    clearActiveRoadmap: (state) => {
-      state.activeRoadmap = null;
+    clearRoadmap: (state) => {
+      state.roadmap = null;
+      state.selectedRole = null;
     },
     clearChatHistory: (state) => {
       state.chatHistory = [];
     },
-    addChatMessage: (state, action) => {
-      state.chatHistory.push(action.payload);
-    },
     clearCareerError: (state) => {
       state.error = null;
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      // fetchCareerRecommendations
-      .addCase(fetchCareerRecommendations.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchCareerRecommendations.fulfilled, (state, action) => {
-        state.loading = false;
-        const payload = action.payload || {};
-        state.recommendations = Array.isArray(payload)
-          ? payload
-          : payload.recommendations || [];
-      })
-      .addCase(fetchCareerRecommendations.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      // fetchRoleRoadmap
-      .addCase(fetchRoleRoadmap.pending, (state) => {
-        state.roadmapLoading = true;
-        state.error = null;
-      })
-      .addCase(fetchRoleRoadmap.fulfilled, (state, action) => {
-        state.roadmapLoading = false;
-        const payload = action.payload || {};
-        state.activeRoadmap = payload.roadmap || payload;
-      })
-      .addCase(fetchRoleRoadmap.rejected, (state, action) => {
-        state.roadmapLoading = false;
-        state.error = action.payload;
-      })
-      // sendCareerAdvisorMessage
-      .addCase(sendCareerAdvisorMessage.pending, (state) => {
-        state.chatLoading = true;
-        state.error = null;
-      })
-      .addCase(sendCareerAdvisorMessage.fulfilled, (state, action) => {
-        state.chatLoading = false;
-        const payload = action.payload || {};
-        const replyText =
-          typeof payload === 'string'
-            ? payload
-            : payload.reply || payload.response || payload.message || 'No response returned.';
-        state.chatHistory.push({
-          role: 'assistant',
-          text: replyText,
-          timestamp: new Date().toISOString(),
-        });
-      })
-      .addCase(sendCareerAdvisorMessage.rejected, (state, action) => {
-        state.chatLoading = false;
-        state.error = action.payload;
-      });
   },
   extraReducers: (builder) => {
     builder
@@ -194,10 +131,9 @@ const careerSlice = createSlice({
       })
       .addCase(fetchCareerTracks.fulfilled, (state, action) => {
         state.loading = false;
-        state.tracks = Array.isArray(action.payload)
-          ? action.payload
-          : action.payload.tracks || [];
-        if (state.tracks.length > 0 && !state.selectedTrack) {
+        const payload = action.payload || {};
+        state.tracks = Array.isArray(payload) ? payload : payload.tracks || [];
+        if (!state.selectedTrack && state.tracks.length > 0) {
           state.selectedTrack = state.tracks[0];
         }
       })
@@ -217,28 +153,77 @@ const careerSlice = createSlice({
       .addCase(generateCustomCareerPath.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      // fetchCareerRecommendations
+      .addCase(fetchCareerRecommendations.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCareerRecommendations.fulfilled, (state, action) => {
+        state.loading = false;
+        const payload = action.payload || {};
+        state.recommendations = Array.isArray(payload) ? payload : payload.recommendations || [];
+      })
+      .addCase(fetchCareerRecommendations.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // fetchRoleRoadmap
+      .addCase(fetchRoleRoadmap.pending, (state) => {
+        state.roadmapLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchRoleRoadmap.fulfilled, (state, action) => {
+        state.roadmapLoading = false;
+        const payload = action.payload || {};
+        state.roadmap = payload.roadmap || payload;
+      })
+      .addCase(fetchRoleRoadmap.rejected, (state, action) => {
+        state.roadmapLoading = false;
+        state.error = action.payload;
+      })
+      // sendAdvisorMessage
+      .addCase(sendAdvisorMessage.pending, (state) => {
+        state.chatLoading = true;
+      })
+      .addCase(sendAdvisorMessage.fulfilled, (state, action) => {
+        state.chatLoading = false;
+        const { prompt, response } = action.payload;
+        state.chatHistory.push(
+          { sender: 'user', text: prompt, timestamp: new Date().toISOString() },
+          {
+            sender: 'advisor',
+            text: response.reply || response.message || response,
+            timestamp: new Date().toISOString(),
+          }
+        );
+      })
+      .addCase(sendAdvisorMessage.rejected, (state, action) => {
+        state.chatLoading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export const { clearCareerError, setSelectedTrack, setCareerData } = careerSlice.actions;
 export const {
-  setCareerFilters,
-  clearActiveRoadmap,
+  setCareerData,
+  setSelectedRole,
+  setSelectedTrack,
+  setTargetDomain,
+  clearRoadmap,
   clearChatHistory,
-  addChatMessage,
   clearCareerError,
 } = careerSlice.actions;
 
 export const selectCareer = (state) => state.career;
 export const selectCareerRecommendations = (state) => state.career.recommendations;
-export const selectActiveRoadmap = (state) => state.career.activeRoadmap;
-export const selectChatHistory = (state) => state.career.chatHistory;
-export const selectCareerFilters = (state) => state.career.filters;
+export const selectSelectedRole = (state) => state.career.selectedRole;
+export const selectCareerRoadmap = (state) => state.career.roadmap;
+export const selectCareerChatHistory = (state) => state.career.chatHistory;
+export const selectTargetDomain = (state) => state.career.targetDomain;
 export const selectCareerLoading = (state) => state.career.loading;
-export const selectChatLoading = (state) => state.career.chatLoading;
 export const selectRoadmapLoading = (state) => state.career.roadmapLoading;
+export const selectChatLoading = (state) => state.career.chatLoading;
 export const selectCareerError = (state) => state.career.error;
 
 export default careerSlice.reducer;
-

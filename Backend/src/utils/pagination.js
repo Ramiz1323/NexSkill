@@ -16,35 +16,26 @@ export const getPaginationOptions = getPagination;
 /**
  * Format paginated result structure
  */
-export const formatPaginatedResponse = (arg1, total, page, limit) => {
-  let items = arg1;
-  let tot = total;
-  let pg = page;
-  let lim = limit;
-
-  // Support object input format: { data: [...], total, page, limit }
-  if (arg1 && typeof arg1 === 'object' && !Array.isArray(arg1) && 'data' in arg1) {
-    items = arg1.data;
-    tot = arg1.total;
-    pg = arg1.page;
-    lim = arg1.limit;
-  }
-
-  const pages = Math.ceil(tot / lim) || 1;
+export const formatPaginatedResponse = (items, total, page, limit) => {
+  const actualItems = Array.isArray(items) ? items : items?.data || [];
+  const actualTotal = total !== undefined ? total : items?.total || actualItems.length;
+  const actualPage = page || items?.page || 1;
+  const actualLimit = limit || items?.limit || 10;
+  const totalPages = Math.ceil(actualTotal / actualLimit) || 1;
 
   return {
-    items,
-    data: items,
+    items: actualItems,
+    data: actualItems,
     pagination: {
-      total: tot,
-      totalItems: tot,
-      page: pg,
-      currentPage: pg,
-      limit: lim,
-      pages,
-      totalPages: pages,
-      hasNextPage: pg < pages,
-      hasPrevPage: pg > 1,
+      total: actualTotal,
+      totalItems: actualTotal,
+      page: actualPage,
+      currentPage: actualPage,
+      limit: actualLimit,
+      pages: totalPages,
+      totalPages,
+      hasNextPage: actualPage < totalPages,
+      hasPrevPage: actualPage > 1,
     },
   };
 };
