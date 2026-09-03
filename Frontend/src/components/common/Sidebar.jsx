@@ -15,7 +15,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 
-const Sidebar = () => {
+const Sidebar = ({ onItemClick, className = '' }) => {
   const navSections = [
     {
       title: 'COMMAND CENTER',
@@ -56,7 +56,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-72 p-4 flex flex-col justify-between shrink-0 min-h-[calc(100vh-4rem)] bg-white border-r border-slate-200">
+    <aside className={`w-64 xl:w-72 p-4 flex flex-col justify-between shrink-0 bg-white ${className}`}>
       {/* Navigation Groups */}
       <div className="flex flex-col gap-5 overflow-y-auto pr-1">
         {navSections.map((section, idx) => (
@@ -71,6 +71,9 @@ const Sidebar = () => {
                   <NavLink
                     key={item.path}
                     to={item.path}
+                    onClick={() => {
+                      if (onItemClick) onItemClick();
+                    }}
                     className={({ isActive }) =>
                       `group flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
                         isActive

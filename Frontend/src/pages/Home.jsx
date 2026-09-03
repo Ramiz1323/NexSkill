@@ -243,22 +243,22 @@ const Home = () => {
         </div>
 
         {/* Impact Metric Chips Bar */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-10 w-full max-w-4xl">
-          <div className="p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-sm text-center">
-            <div className="text-xl sm:text-2xl font-black text-indigo-600">98.4%</div>
-            <div className="text-xs font-semibold text-slate-500 mt-0.5">ATS Diagnostic Precision</div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 mt-8 sm:mt-10 w-full max-w-4xl">
+          <div className="p-3 sm:p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-sm text-center">
+            <div className="text-lg sm:text-2xl font-black text-indigo-600">98.4%</div>
+            <div className="text-[11px] sm:text-xs font-semibold text-slate-500 mt-0.5">ATS Diagnostic Precision</div>
           </div>
-          <div className="p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-sm text-center">
-            <div className="text-xl sm:text-2xl font-black text-emerald-600">40+</div>
-            <div className="text-xs font-semibold text-slate-500 mt-0.5">Industry Co-Designed Tracks</div>
+          <div className="p-3 sm:p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-sm text-center">
+            <div className="text-lg sm:text-2xl font-black text-emerald-600">40+</div>
+            <div className="text-[11px] sm:text-xs font-semibold text-slate-500 mt-0.5">Industry Co-Designed Tracks</div>
           </div>
-          <div className="p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-sm text-center">
-            <div className="text-xl sm:text-2xl font-black text-cyan-600">5-Year</div>
-            <div className="text-xs font-semibold text-slate-500 mt-0.5">Predictive AI Forecasting</div>
+          <div className="p-3 sm:p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-sm text-center">
+            <div className="text-lg sm:text-2xl font-black text-cyan-600">5-Year</div>
+            <div className="text-[11px] sm:text-xs font-semibold text-slate-500 mt-0.5">Predictive AI Forecasting</div>
           </div>
-          <div className="p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-sm text-center">
-            <div className="text-xl sm:text-2xl font-black text-amber-600">100%</div>
-            <div className="text-xs font-semibold text-slate-500 mt-0.5">Closed-Loop Alignment</div>
+          <div className="p-3 sm:p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-sm text-center">
+            <div className="text-lg sm:text-2xl font-black text-amber-600">100%</div>
+            <div className="text-[11px] sm:text-xs font-semibold text-slate-500 mt-0.5">Closed-Loop Alignment</div>
           </div>
         </div>
 
@@ -464,7 +464,7 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 w-full lg:w-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full lg:w-auto">
             {placementPartners.map((partner, pIdx) => (
               <div
                 key={pIdx}

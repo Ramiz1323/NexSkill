@@ -96,12 +96,12 @@ export default function DemandForecasting() {
 
       {/* Projections Table & Cards */}
       <section className="space-y-4">
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg font-bold text-slate-900">Multi-Year Skill Trajectory Models</h2>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+          <h2 className="text-base sm:text-lg font-bold text-slate-900">Multi-Year Skill Trajectory Models</h2>
           <span className="text-xs text-slate-500 font-semibold">Forecast Model: ARIMA + LLM Synthesis</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {(projections && projections.length > 0 ? projections : [
             { skill: 'Generative AI & LLM Systems', growth2026: 88, growth2028: 145, riskScore: 'Low', adoption: 'Hypergrowth' },
             { skill: 'Kubernetes & Cloud Orchestration', growth2026: 72, growth2028: 110, riskScore: 'Very Low', adoption: 'Mainstream Standard' },

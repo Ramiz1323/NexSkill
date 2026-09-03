@@ -10,7 +10,9 @@ import {
   ShieldCheck,
   ChevronDown,
   Layers,
-  Zap
+  Zap,
+  Menu,
+  X
 } from 'lucide-react';
 import { logoutUser } from '../../redux/slices/authSlice';
 import Button from './Button';
@@ -23,6 +25,7 @@ const Navbar = () => {
 
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showMobileNav, setShowMobileNav] = useState(false);
 
   const handleLogout = () => {
     dispatch(logoutUser());
@@ -199,8 +202,53 @@ const Navbar = () => {
               </Link>
             </div>
           )}
+          {/* Mobile Navigation Toggle Button */}
+          <button
+            onClick={() => setShowMobileNav(!showMobileNav)}
+            className="p-2 rounded-xl text-slate-600 hover:bg-slate-100 border border-slate-200/60 md:hidden transition-colors"
+            aria-label="Toggle navigation menu"
+          >
+            {showMobileNav ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Nav Dropdown */}
+      {showMobileNav && (
+        <div className="md:hidden border-t border-slate-200 bg-white px-4 py-3 shadow-lg flex flex-col gap-1 animate-in slide-in-from-top-2 duration-150">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold w-fit mb-1">
+            <Zap className="w-3.5 h-3.5 text-indigo-600" />
+            <span>Persona: {userPersona}</span>
+          </div>
+          <Link
+            to="/"
+            onClick={() => setShowMobileNav(false)}
+            className={`px-3 py-2 rounded-xl text-sm font-semibold transition-colors ${
+              location.pathname === '/' ? 'bg-indigo-50 text-indigo-600 font-bold' : 'text-slate-700 hover:bg-slate-50'
+            }`}
+          >
+            Home
+          </Link>
+          <Link
+            to="/dashboard"
+            onClick={() => setShowMobileNav(false)}
+            className={`px-3 py-2 rounded-xl text-sm font-semibold transition-colors ${
+              location.pathname.startsWith('/dashboard') ? 'bg-indigo-50 text-indigo-600 font-bold' : 'text-slate-700 hover:bg-slate-50'
+            }`}
+          >
+            Dashboard
+          </Link>
+          <Link
+            to="/market-intelligence"
+            onClick={() => setShowMobileNav(false)}
+            className={`px-3 py-2 rounded-xl text-sm font-semibold transition-colors ${
+              location.pathname === '/market-intelligence' ? 'bg-indigo-50 text-indigo-600 font-bold' : 'text-slate-700 hover:bg-slate-50'
+            }`}
+          >
+            Market Signals
+          </Link>
+        </div>
+      )}
     </header>
   );
 };

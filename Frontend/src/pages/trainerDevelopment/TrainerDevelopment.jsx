@@ -83,7 +83,7 @@ const TrainerDevelopment = () => {
   };
 
   return (
-    <div className="p-6 space-y-8 max-w-7xl mx-auto">
+    <div className="space-y-6 sm:space-y-8 max-w-7xl mx-auto px-1 sm:px-2">
       {/* Header */}
       <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
@@ -196,7 +196,7 @@ const TrainerDevelopment = () => {
             </Button>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {programs.map((program) => {
               const programId = program._id || program.id;
               const isEnrolled =
