@@ -15,6 +15,9 @@ import MarketIntelligence from '../pages/marketIntelligence/MarketIntelligence';
 import IndustryCurriculum from '../pages/curriculum/IndustryCurriculum';
 import DynamicCurriculum from '../pages/curriculum/DynamicCurriculum';
 import DemandForecasting from '../pages/demandForecasting/DemandForecasting';
+import EmployerDiscovery from '../pages/employerPanel/EmployerDiscovery';
+import AiCareerGuidance from '../pages/careerGuidance/AiCareerGuidance';
+import TrainerDevelopment from '../pages/trainerDevelopment/TrainerDevelopment';
 
 const AppRoutes = () => {
   return (
@@ -46,6 +49,9 @@ const AppRoutes = () => {
           <Route path="/dashboard/industry-curriculum" element={<IndustryCurriculum />} />
           <Route path="/dashboard/dynamic-curriculum" element={<DynamicCurriculum />} />
           <Route path="/dashboard/demand-forecasting" element={<DemandForecasting />} />
+          <Route path="/employer-discovery" element={<EmployerDiscovery />} />
+          <Route path="/career-guidance" element={<AiCareerGuidance />} />
+          <Route path="/trainer-development" element={<TrainerDevelopment />} />
         </Route>
       </Route>
     </Routes>
