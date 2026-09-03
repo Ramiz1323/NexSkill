@@ -37,15 +37,15 @@ router.use('/skills', skillRoutes);
 router.use('/skill-profiles', skillProfileRoutes);
 router.use('/assessments', assessmentRoutes);
 
-// Phase 4 Future Mount Points
-// router.use('/roadmap', roadmapRoutes);
-// router.use('/courses', courseRoutes);
-// router.use('/progress', progressRoutes);
-// router.use('/jobs', jobRoutes);
-// router.use('/employers', employerRoutes);
-// router.use('/applications', applicationRoutes);
-// router.use('/matching', matchingRoutes);
-// router.use('/feedback', feedbackRoutes);
-// router.use('/intelligence', intelligenceRoutes);
+// Phase 4 Intelligence Loops & Resume ATS
+import skillGapRoutes from '../modules/skillGaps/skillGap.routes.js';
+import readinessRoutes from '../modules/readiness/readiness.routes.js';
+import resumeRoutes from '../modules/resume/resume.routes.js';
+import curriculumRoutes from './curriculumRoutes.js';
+
+router.use('/skill-gaps', skillGapRoutes);
+router.use('/readiness', readinessRoutes);
+router.use('/resume', resumeRoutes);
+router.use('/curriculum', curriculumRoutes);
 
 export default router;
