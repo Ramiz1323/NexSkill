@@ -11,6 +11,9 @@ import Register from '../pages/auth/Register';
 import DashboardOverview from '../pages/dashboard/DashboardOverview';
 import AtsResumeAnalyzer from '../pages/resumeAnalyzer/AtsResumeAnalyzer';
 import CredentialTracker from '../pages/progressTracker/CredentialTracker';
+import EmployerDiscovery from '../pages/employerPanel/EmployerDiscovery';
+import AiCareerGuidance from '../pages/careerGuidance/AiCareerGuidance';
+import TrainerDevelopment from '../pages/trainerDevelopment/TrainerDevelopment';
 
 const AppRoutes = () => {
   return (
@@ -32,6 +35,9 @@ const AppRoutes = () => {
           <Route path="/dashboard" element={<DashboardOverview />} />
           <Route path="/resume-analyzer" element={<AtsResumeAnalyzer />} />
           <Route path="/credential-tracker" element={<CredentialTracker />} />
+          <Route path="/employer-discovery" element={<EmployerDiscovery />} />
+          <Route path="/career-guidance" element={<AiCareerGuidance />} />
+          <Route path="/trainer-development" element={<TrainerDevelopment />} />
         </Route>
       </Route>
     </Routes>
