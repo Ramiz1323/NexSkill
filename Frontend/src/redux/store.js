@@ -1,4 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
+import marketReducer from './slices/marketSlice';
+import curriculumReducer from './slices/curriculumSlice';
+import demandReducer from './slices/demandSlice';
+
+export const store = configureStore({
+  reducer: {
+    market: marketReducer,
+    curriculum: curriculumReducer,
+    demand: demandReducer,
 import authReducer from './slices/authSlice';
 import resumeReducer from './slices/resumeSlice';
 import progressReducer from './slices/progressSlice';
