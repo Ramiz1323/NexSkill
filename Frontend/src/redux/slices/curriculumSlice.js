@@ -81,6 +81,8 @@ const initialState = {
     success: false,
     error: null,
   },
+  modules: [],
+  activeCurriculum: null,
   loading: false,
   error: null,
 };
@@ -102,6 +104,20 @@ const curriculumSlice = createSlice({
     clearCurriculumErrors: (state) => {
       state.error = null;
       state.feedbackStatus.error = null;
+    },
+    setCurriculumData: (state, action) => {
+      state.modules = action.payload.modules || [];
+      state.activeCurriculum = action.payload.activeCurriculum || null;
+      state.curriculums = action.payload.curriculums || state.curriculums;
+      state.loading = false;
+      state.error = null;
+    },
+    setCurriculumLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+    setCurriculumError: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
     },
   },
   extraReducers: (builder) => {
@@ -183,6 +199,10 @@ export const {
   setSelectedCurriculum,
   resetFeedbackStatus,
   clearCurriculumErrors,
+  setCurriculumData,
+  setCurriculumLoading,
+  setCurriculumError,
 } = curriculumSlice.actions;
 
 export default curriculumSlice.reducer;
+

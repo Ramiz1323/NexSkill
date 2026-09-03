@@ -70,6 +70,20 @@ const marketSlice = createSlice({
     clearMarketErrors: (state) => {
       state.error = null;
     },
+    setMarketData: (state, action) => {
+      state.demandTrends = action.payload.demandTrends || action.payload.marketData || [];
+      state.skillDistribution = action.payload.skillDistribution || action.payload.trends || [];
+      state.summary = action.payload.summary || {};
+      state.loading = false;
+      state.error = null;
+    },
+    setMarketLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+    setMarketError: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -122,6 +136,10 @@ export const {
   setRegionFilter,
   setTimeframeFilter,
   clearMarketErrors,
+  setMarketData,
+  setMarketLoading,
+  setMarketError,
 } = marketSlice.actions;
 
 export default marketSlice.reducer;
+

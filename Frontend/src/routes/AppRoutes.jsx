@@ -12,6 +12,13 @@ import DashboardOverview from '../pages/dashboard/DashboardOverview';
 import AtsResumeAnalyzer from '../pages/resumeAnalyzer/AtsResumeAnalyzer';
 import CredentialTracker from '../pages/progressTracker/CredentialTracker';
 import MarketIntelligence from '../pages/marketIntelligence/MarketIntelligence';
+import DemandForecasting from '../pages/demandForecasting/DemandForecasting';
+import DynamicCurriculum from '../pages/curriculum/DynamicCurriculum';
+import IndustryCurriculum from '../pages/curriculum/IndustryCurriculum';
+import EmployerDiscovery from '../pages/employerPanel/EmployerDiscovery';
+import AiCareerGuidance from '../pages/careerGuidance/AiCareerGuidance';
+import TrainerDevelopment from '../pages/trainerDevelopment/TrainerDevelopment';
+import SkillAssessment from '../pages/assessment/SkillAssessment';
 import IndustryCurriculum from '../pages/curriculum/IndustryCurriculum';
 import DynamicCurriculum from '../pages/curriculum/DynamicCurriculum';
 import DemandForecasting from '../pages/demandForecasting/DemandForecasting';
@@ -43,8 +50,13 @@ const AppRoutes = () => {
       <Route element={<ProtectedRoute />}>
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<DashboardOverview />} />
+          <Route path="/assessment" element={<SkillAssessment />} />
           <Route path="/resume-analyzer" element={<AtsResumeAnalyzer />} />
           <Route path="/credential-tracker" element={<CredentialTracker />} />
+          <Route path="/market-intelligence" element={<MarketIntelligence />} />
+          <Route path="/demand-forecasting" element={<DemandForecasting />} />
+          <Route path="/dynamic-curriculum" element={<DynamicCurriculum />} />
+          <Route path="/industry-curriculum" element={<IndustryCurriculum />} />
           <Route path="/dashboard/market-intelligence" element={<MarketIntelligence />} />
           <Route path="/dashboard/industry-curriculum" element={<IndustryCurriculum />} />
           <Route path="/dashboard/dynamic-curriculum" element={<DynamicCurriculum />} />
@@ -57,5 +69,6 @@ const AppRoutes = () => {
     </Routes>
   );
 };
+
 
 export default AppRoutes;

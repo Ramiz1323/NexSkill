@@ -12,6 +12,7 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(
   (config) => {
+    const token = localStorage.getItem('token');
     const token = localStorage.getItem('token') || localStorage.getItem('nexskill_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -35,3 +36,4 @@ axiosClient.interceptors.response.use(
 );
 
 export default axiosClient;
+
