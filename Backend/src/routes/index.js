@@ -7,6 +7,8 @@ import { courseRoutes } from '../modules/courses/index.js';
 import { curriculumRoutes } from '../modules/curriculum/index.js';
 import { roadmapRoutes } from '../modules/roadmap/index.js';
 import { learningRoutes } from '../modules/learning/index.js';
+import { labourMarketRoutes } from '../modules/labourMarket/index.js';
+import { emergingSkillsRoutes } from '../modules/emergingSkills/index.js';
 import healthRoutes from './health.routes.js';
 
 const router = Router();
@@ -26,6 +28,10 @@ router.use('/curriculum', curriculumRoutes);
 router.use('/roadmap', roadmapRoutes);
 router.use('/learning', learningRoutes);
 
+// Phase 9: Labour Market Intelligence & Emerging Skills
+router.use('/labour-market', labourMarketRoutes);
+router.use('/emerging-skills', emergingSkillsRoutes);
+
 export {
   router as masterRouter,
   employerRoutes,
@@ -36,6 +42,8 @@ export {
   curriculumRoutes,
   roadmapRoutes,
   learningRoutes,
+  labourMarketRoutes,
+  emergingSkillsRoutes,
 };
 
 export default router;
