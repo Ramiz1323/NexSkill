@@ -1,11 +1,23 @@
+<<<<<<< HEAD
 export const getPaginationOptions = (query) => {
   const page = Math.max(1, parseInt(query.page, 10) || 1);
   const limit = Math.min(100, Math.max(1, parseInt(query.limit, 10) || 10));
+=======
+/**
+ * Pagination helper for MongoDB queries
+ * @param {Object} queryParams - { page, limit }
+ * @returns {Object} { page, limit, skip }
+ */
+export const getPagination = (queryParams = {}) => {
+  const page = Math.max(1, parseInt(queryParams.page, 10) || 1);
+  const limit = Math.min(100, Math.max(1, parseInt(queryParams.limit, 10) || 10));
+>>>>>>> b7782a51ab4547fa45f528ac0894c3b7bd6d4e53
   const skip = (page - 1) * limit;
 
   return { page, limit, skip };
 };
 
+<<<<<<< HEAD
 export const formatPaginatedResponse = ({ data, total, page, limit }) => {
   const totalPages = Math.ceil(total / limit);
 
@@ -18,11 +30,28 @@ export const formatPaginatedResponse = ({ data, total, page, limit }) => {
       limit,
       hasNextPage: page < totalPages,
       hasPrevPage: page > 1,
+=======
+/**
+ * Format paginated result structure
+ */
+export const formatPaginatedResponse = (items, total, page, limit) => {
+  return {
+    items,
+    pagination: {
+      total,
+      page,
+      limit,
+      pages: Math.ceil(total / limit) || 1,
+>>>>>>> b7782a51ab4547fa45f528ac0894c3b7bd6d4e53
     },
   };
 };
 
+<<<<<<< HEAD
 export default {
   getPaginationOptions,
   formatPaginatedResponse,
 };
+=======
+export default { getPagination, formatPaginatedResponse };
+>>>>>>> b7782a51ab4547fa45f528ac0894c3b7bd6d4e53

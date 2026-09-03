@@ -11,6 +11,19 @@ const app = express();
 
 // Security & Cross-Origin
 app.use(cors(corsOptions));
+import masterRouter from './routes/index.js';
+import errorHandler from './middleware/errorMiddleware.js';
+
+
+// Middlewares
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || '*',
+    credentials: true,
+  })
+);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Body & Cookie Parsers
 app.use(express.json({ limit: '16kb' }));
@@ -48,5 +61,11 @@ app.use((req, res, next) => {
 
 // Centralized Error Handling Middleware
 app.use(errorMiddleware);
+
+// API Routes
+app.use('/api', masterRouter);
+
+// Global Error Handler
+app.use(errorHandler);
 
 export default app;
