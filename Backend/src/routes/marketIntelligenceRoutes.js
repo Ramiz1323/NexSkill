@@ -7,9 +7,14 @@ const router = Router();
 
 // 1. Get Live Market Demand Trends across Tech Hubs
 router.get(
-  '/demand',
+  ['/demand', '/trends'],
   asyncHandler(async (req, res) => {
-    const records = await LabourMarket.find().lean();
+    let records = [];
+    try {
+      records = await LabourMarket.find().lean();
+    } catch (err) {
+      console.warn('⚠️ LabourMarket query failed:', err.message);
+    }
     
     if (records && records.length > 0) {
       return res.status(200).json(
@@ -34,7 +39,7 @@ router.get(
 
 // 2. Get Industry Skill Distribution
 router.get(
-  '/skills',
+  ['/skills', '/distribution'],
   asyncHandler(async (req, res) => {
     const skillDistribution = [
       { category: 'AI / Machine Learning', weight: 32, topSkills: ['PyTorch', 'LangChain', 'HuggingFace', 'FastAPI'] },

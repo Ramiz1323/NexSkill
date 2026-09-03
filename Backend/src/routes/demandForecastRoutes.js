@@ -7,10 +7,15 @@ const router = Router();
 
 // 1. Skill Demand Forecast Projections (1Y, 3Y, 5Y Horizon)
 router.get(
-  '/projections',
+  ['/projections', '/forecast'],
   asyncHandler(async (req, res) => {
     const horizon = req.query.horizon || '5Y';
-    const dbSkills = await EmergingSkill.find().lean();
+    let dbSkills = [];
+    try {
+      dbSkills = await EmergingSkill.find().lean();
+    } catch (err) {
+      console.warn('⚠️ EmergingSkill query failed, using telemetry models:', err.message);
+    }
 
     if (dbSkills && dbSkills.length > 0) {
       return res.status(200).json(
@@ -23,6 +28,7 @@ router.get(
       { skill: 'Kubernetes & Cloud Orchestration', growth2026: 72, growth2028: 110, riskScore: 'Very Low', adoption: 'Mainstream Standard' },
       { skill: 'Cybersecurity Threat Modeling', growth2026: 65, growth2028: 98, riskScore: 'Low', adoption: 'Mandatory' },
       { skill: 'Rust & Systems Optimization', growth2026: 54, growth2028: 85, riskScore: 'Moderate', adoption: 'Rapid Growth' },
+      { skill: 'Distributed Ledger & Smart Contracts', growth2026: 42, growth2028: 68, riskScore: 'Moderate', adoption: 'Selective' },
       { skill: 'Legacy Monolithic Maintenance', growth2026: -28, growth2028: -64, riskScore: 'High Risk', adoption: 'Declining' },
     ];
 
@@ -34,13 +40,13 @@ router.get(
 
 // 2. Emerging Tech Roles Forecast
 router.get(
-  '/emerging-roles',
+  ['/emerging-roles', '/roles'],
   asyncHandler(async (req, res) => {
     const roles = [
       { title: 'AI Ethics & Alignment Auditor', demandIndex: 94, requiredCore: ['LLM Evaluation', 'Bias Detection', 'Python', 'Governance'] },
       { title: 'Platform & FinOps Engineer', demandIndex: 89, requiredCore: ['Kubernetes', 'AWS Cost Explorer', 'Prometheus', 'Terraform'] },
       { title: 'Quantum Algorithm Specialist', demandIndex: 76, requiredCore: ['Qiskit', 'Linear Algebra', 'Python', 'Quantum Circuit Design'] },
-      { title: 'Autonomous Agent Orchestrator', demandIndex: 96, requiredCore: ['LangChain', 'CrewAI', 'Vector DBs', 'FastAPI'] },
+      { title: 'Autonomous Multi-Agent Orchestrator', demandIndex: 96, requiredCore: ['LangChain', 'CrewAI', 'Vector DBs', 'FastAPI'] },
     ];
 
     return res.status(200).json(
@@ -49,9 +55,9 @@ router.get(
   })
 );
 
-// 3. Automation Impact Analysis
+// 3. Automation Impact / Automation Risk Analysis (Supports both /automation-risk and /automation-impact)
 router.get(
-  '/automation-impact',
+  ['/automation-risk', '/automation-impact'],
   asyncHandler(async (req, res) => {
     const analysis = [
       { sector: 'Manual Software QA & Basic Scripting', displacementProbability: 68, mitigationStrategy: 'Upskill to AI-augmented Test Automation & Security QA' },
@@ -61,7 +67,7 @@ router.get(
     ];
 
     return res.status(200).json(
-      new ApiResponse(200, analysis, 'Automation impact analysis fetched successfully')
+      new ApiResponse(200, analysis, 'Automation risk & impact analysis fetched successfully')
     );
   })
 );
