@@ -26,10 +26,18 @@ router.get('/health', (req, res) => {
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
 
-// Phase 2 - 4 Future Mount Points
-// router.use('/students', studentRoutes);
-// router.use('/skills', skillRoutes);
-// router.use('/assessments', assessmentRoutes);
+// Phase 2 & 3 Domain Routes
+import studentRoutes from '../modules/students/student.routes.js';
+import skillRoutes from '../modules/skills/skill.routes.js';
+import skillProfileRoutes from '../modules/skillProfiles/skillProfile.routes.js';
+import assessmentRoutes from '../modules/assessments/assessment.routes.js';
+
+router.use('/students', studentRoutes);
+router.use('/skills', skillRoutes);
+router.use('/skill-profiles', skillProfileRoutes);
+router.use('/assessments', assessmentRoutes);
+
+// Phase 4 Future Mount Points
 // router.use('/roadmap', roadmapRoutes);
 // router.use('/courses', courseRoutes);
 // router.use('/progress', progressRoutes);
