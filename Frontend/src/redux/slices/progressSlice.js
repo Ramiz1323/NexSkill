@@ -1,4 +1,33 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { fetchProgressApi, addCredentialApi } from '../../api/progressTrackerApi';
+
+export const fetchProgress = createAsyncThunk(
+  'progress/fetchProgress',
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await fetchProgressApi();
+      return data;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || err.message || 'Failed to load progress data.'
+      );
+    }
+  }
+);
+
+export const addCredentialThunk = createAsyncThunk(
+  'progress/addCredentialThunk',
+  async (credentialData, { rejectWithValue }) => {
+    try {
+      const data = await addCredentialApi(credentialData);
+      return data;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || err.message || 'Failed to add credential.'
+      );
+    }
+  }
+);
 
 const initialState = {
   credentials: [],
@@ -19,18 +48,45 @@ const progressSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
-    addCredential: (state, action) => {
-      state.credentials.push(action.payload);
+    clearProgressError: (state) => {
+      state.error = null;
     },
-    setProgressLoading: (state, action) => {
-      state.loading = action.payload;
-    },
-    setProgressError: (state, action) => {
-      state.error = action.payload;
-      state.loading = false;
-    },
+  },
+  extraReducers: (builder) => {
+    builder
+      // fetchProgress
+      .addCase(fetchProgress.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchProgress.fulfilled, (state, action) => {
+        state.loading = false;
+        state.credentials = action.payload.credentials || [];
+        state.skillProgress = action.payload.skillProgress || [];
+        state.overallProgress = action.payload.overallProgress || 0;
+        state.error = null;
+      })
+      .addCase(fetchProgress.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // addCredentialThunk
+      .addCase(addCredentialThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addCredentialThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        const newCred = action.payload.credential || action.payload;
+        state.credentials.push(newCred);
+        state.error = null;
+      })
+      .addCase(addCredentialThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 
-export const { setProgressData, addCredential, setProgressLoading, setProgressError } = progressSlice.actions;
+export const { setProgressData, clearProgressError } = progressSlice.actions;
 export default progressSlice.reducer;
