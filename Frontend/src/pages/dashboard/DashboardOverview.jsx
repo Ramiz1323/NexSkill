@@ -48,15 +48,15 @@ const DashboardOverview = () => {
   }, [dispatch]);
 
   const quickLaunchPillars = [
-    { title: 'Labour Intelligence', path: '/market-intelligence', icon: TrendingUp, mod: 'M1', status: 'Live Analytics' },
-    { title: 'Industry Curriculum', path: '/industry-curriculum', icon: BookOpenCheck, mod: 'M2', status: 'Co-Designed' },
-    { title: 'ATS Resume Scanner', path: '/resume-analyzer', icon: FileCheck2, mod: 'M3', status: 'AI Diagnostics' },
-    { title: 'Credential Tracker', path: '/credential-tracker', icon: Award, mod: 'M4', status: 'Verifiable' },
-    { title: 'Employer Discovery', path: '/employer-discovery', icon: Building2, mod: 'M5', status: 'Recruitment' },
-    { title: 'Dynamic Learning Path', path: '/dynamic-curriculum', icon: GitMerge, mod: 'M6', status: 'Adaptive' },
-    { title: 'Demand Forecasting', path: '/demand-forecasting', icon: LineChart, mod: 'M7', status: 'Predictive' },
-    { title: 'AI Career Guidance', path: '/career-guidance', icon: Compass, mod: 'M8', status: 'Roadmap' },
-    { title: 'Trainer Development', path: '/trainer-development', icon: GraduationCap, mod: 'M9', status: 'Faculty Upskill' },
+    { title: 'Labour Intelligence', path: '/market-intelligence', icon: TrendingUp, status: 'Live Analytics' },
+    { title: 'Industry Curriculum', path: '/industry-curriculum', icon: BookOpenCheck, status: 'Co-Designed' },
+    { title: 'ATS Resume Scanner', path: '/resume-analyzer', icon: FileCheck2, status: 'AI Diagnostics' },
+    { title: 'Credential Tracker', path: '/credential-tracker', icon: Award, status: 'Verifiable' },
+    { title: 'Employer Discovery', path: '/employer-discovery', icon: Building2, status: 'Recruitment' },
+    { title: 'Dynamic Learning Path', path: '/dynamic-curriculum', icon: GitMerge, status: 'Adaptive' },
+    { title: 'Demand Forecasting', path: '/demand-forecasting', icon: LineChart, status: 'Predictive' },
+    { title: 'AI Career Guidance', path: '/career-guidance', icon: Compass, status: 'Roadmap' },
+    { title: 'Trainer Development', path: '/trainer-development', icon: GraduationCap, status: 'Faculty Upskill' },
   ];
 
   const isLoading = resumeLoading || progressLoading || marketLoading;
@@ -276,7 +276,6 @@ const DashboardOverview = () => {
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-mono font-bold text-indigo-500">{p.mod}</span>
                       <h3 className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
                         {p.title}
                       </h3>

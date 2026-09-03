@@ -341,9 +341,6 @@ const Home = () => {
                     >
                       <Icon className="w-5 h-5" />
                     </div>
-                    <span className="text-xs font-bold font-mono px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 border border-slate-200">
-                      {pillar.id}
-                    </span>
                   </div>
 
                   <h3 className="text-base font-bold text-slate-900 group-hover:text-indigo-600 transition-colors flex items-center gap-1.5">

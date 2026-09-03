@@ -134,7 +134,7 @@ const EmployerDiscovery = () => {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-indigo text-xs font-bold mb-2">
             <Building2 className="w-3.5 h-3.5" />
-            <span>Module 5: Employer Discovery Panel</span>
+            <span>Employer Discovery Panel</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             Vetted Talent Discovery Panel
