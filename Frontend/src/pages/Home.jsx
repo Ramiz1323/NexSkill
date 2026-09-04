@@ -485,7 +485,7 @@ const Home = () => {
       <section className="px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center w-full">
         <div className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-blue-700 rounded-3xl p-8 sm:p-12 text-white shadow-xl relative overflow-hidden flex flex-col items-center">
           <div className="absolute top-0 right-0 -mt-10 -mr-10 w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none" />
-          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
+          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
             Ready to Accelerate Skill-to-Career Alignment?
           </h2>
           <p className="mt-3 text-sm sm:text-base text-indigo-100 max-w-xl leading-relaxed">

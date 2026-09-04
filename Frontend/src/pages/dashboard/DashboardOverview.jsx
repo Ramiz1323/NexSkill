@@ -81,15 +81,15 @@ const DashboardOverview = () => {
           </div>
 
           {/* Overall Readiness Gauge */}
-          <div className="shrink-0 flex items-center gap-4 bg-white/15 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/25 shadow-sm w-full sm:w-auto justify-between sm:justify-start">
-            <div className="w-14 h-14 rounded-xl bg-white text-indigo-600 flex items-center justify-center font-black text-2xl shadow-md shrink-0">
+          <div className="shrink-0 flex items-center gap-4 sm:gap-5 bg-white/15 backdrop-blur-md px-5 py-4 sm:px-6 sm:py-4 rounded-2xl border border-white/25 shadow-sm w-full sm:w-auto justify-between sm:justify-start">
+            <div className="min-w-[4.75rem] h-14 px-3.5 rounded-2xl bg-white text-indigo-600 flex items-center justify-center font-black text-xl sm:text-2xl shadow-md shrink-0 tracking-tight">
               {overallProgress !== undefined && overallProgress !== null ? `${overallProgress}%` : '78%'}
             </div>
-            <div>
+            <div className="space-y-0.5">
               <span className="text-xs text-indigo-100 uppercase tracking-wider font-bold block">
                 Job Readiness Index
               </span>
-              <span className="text-sm font-bold text-emerald-200 flex items-center gap-1.5 mt-0.5">
+              <span className="text-sm font-bold text-emerald-200 flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-300" /> Live Metric
               </span>
             </div>
