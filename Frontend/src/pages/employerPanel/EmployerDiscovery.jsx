@@ -178,28 +178,63 @@ const EmployerDiscovery = () => {
                 placeholder="Add skill (e.g. React, Python)"
                 value={skillInput}
                 onChange={(e) => setSkillInput(e.target.value)}
-                className="w-full p-2 border border-slate-200 rounded-xl text-xs bg-slate-50 focus:bg-white text-slate-900"
+                className="w-full p-2.5 border border-slate-200 rounded-xl text-xs bg-slate-50 focus:bg-white text-slate-900 outline-none"
               />
-              <Button type="submit" variant="secondary" size="sm">
+              <Button type="submit" variant="secondary" size="sm" className="px-3 text-xs font-bold">
                 Add
               </Button>
             </form>
           </div>
 
-          {/* Min Match Score Filter */}
-          <div>
-            <label className="block text-xs font-semibold mb-1 text-slate-700">
-              Min Match Score: {filters.minScore}%
-            </label>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              step="5"
-              value={filters.minScore}
-              onChange={handleMinScoreChange}
-              className="w-full"
-            />
+          {/* Min Match Score Filter - Upgraded UI */}
+          <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2">
+            <div className="flex justify-between items-center text-xs">
+              <span className="font-bold text-slate-700">Min Match Score</span>
+              <span className="badge-indigo px-2.5 py-0.5 rounded-full text-xs font-extrabold shadow-sm">
+                ≥ {filters.minScore}%
+              </span>
+            </div>
+            <div className="relative flex items-center">
+              <input
+                type="range"
+                min="0"
+                max="100"
+                step="5"
+                value={filters.minScore}
+                onChange={handleMinScoreChange}
+                className="w-full"
+              />
+            </div>
+            <div className="flex justify-between text-[10px] text-slate-400 font-semibold px-0.5">
+              <button
+                type="button"
+                onClick={() => dispatch(setEmployerFilters({ minScore: 0 }))}
+                className={`hover:text-indigo-600 transition-colors ${filters.minScore === 0 ? 'text-indigo-600 font-bold' : ''}`}
+              >
+                All
+              </button>
+              <button
+                type="button"
+                onClick={() => dispatch(setEmployerFilters({ minScore: 50 }))}
+                className={`hover:text-indigo-600 transition-colors ${filters.minScore === 50 ? 'text-indigo-600 font-bold' : ''}`}
+              >
+                50%+
+              </button>
+              <button
+                type="button"
+                onClick={() => dispatch(setEmployerFilters({ minScore: 75 }))}
+                className={`hover:text-indigo-600 transition-colors ${filters.minScore === 75 ? 'text-indigo-600 font-bold' : ''}`}
+              >
+                75%+
+              </button>
+              <button
+                type="button"
+                onClick={() => dispatch(setEmployerFilters({ minScore: 90 }))}
+                className={`hover:text-indigo-600 transition-colors ${filters.minScore === 90 ? 'text-indigo-600 font-bold' : ''}`}
+              >
+                Top 90%
+              </button>
+            </div>
           </div>
 
           {/* Experience Level */}
@@ -208,7 +243,7 @@ const EmployerDiscovery = () => {
             <select
               value={filters.experienceLevel}
               onChange={handleExperienceChange}
-              className="w-full p-2 border border-slate-200 rounded-xl text-xs bg-slate-50 focus:bg-white text-slate-900"
+              className="w-full p-2.5 border border-slate-200 rounded-xl text-xs bg-slate-50 focus:bg-white text-slate-900 font-semibold outline-none cursor-pointer"
             >
               <option value="">All Experience Levels</option>
               {EXPERIENCE_LEVELS && (
@@ -228,7 +263,7 @@ const EmployerDiscovery = () => {
               variant="secondary"
               size="sm"
               onClick={handleResetFilters}
-              className="w-full flex items-center justify-center gap-2"
+              className="w-full p-2.5 flex items-center justify-center gap-2 text-xs font-bold"
             >
               <RotateCcw size={14} /> Reset Filters
             </Button>
@@ -387,51 +422,149 @@ const EmployerDiscovery = () => {
         <Modal
           isOpen={Boolean(selectedCandidate)}
           onClose={() => dispatch(clearSelectedCandidate())}
-          title={selectedCandidate.name || 'Candidate Profile'}
+          title="Candidate Profile & Dossier"
+          subtitle="Detailed verification, skills analysis, and recruitment pipeline status"
+          maxWidth="max-w-xl"
         >
-          <div className="space-y-4 text-xs">
-            {actionLoading && <Loader message="Loading profile details..." />}
+          <div className="space-y-4 pt-1">
+            {actionLoading && <Loader message="Updating candidate status..." />}
 
-            <div>
-              <p className="font-semibold text-sm text-indigo-600">{selectedCandidate.title || 'Job Ready Candidate'}</p>
-              {selectedCandidate.location && (
-                <p className="text-slate-500">{selectedCandidate.location}</p>
-              )}
+            {/* Candidate Header Profile Banner */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-gradient-to-r from-indigo-50 via-slate-50 to-white border border-indigo-100 shadow-xs">
+              <div className="flex items-center gap-3.5">
+                <div className="w-13 h-13 rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-400 text-white font-black text-lg flex items-center justify-center shadow-md shrink-0">
+                  {(selectedCandidate.name || 'Candidate')
+                    .split(' ')
+                    .map((n) => n[0])
+                    .slice(0, 2)
+                    .join('')
+                    .toUpperCase()}
+                </div>
+                <div>
+                  <h4 className="text-lg font-extrabold text-slate-900 tracking-tight">
+                    {selectedCandidate.name || 'Candidate Profile'}
+                  </h4>
+                  <p className="font-bold text-xs text-indigo-600 flex items-center gap-1">
+                    <Briefcase className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+                    {selectedCandidate.title || 'Job Ready Candidate'}
+                  </p>
+                  {selectedCandidate.location && (
+                    <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5 font-medium">
+                      <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
+                      {selectedCandidate.location}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="self-start sm:self-center">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold shadow-xs">
+                  <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  Verified Talent
+                </span>
+              </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 p-3 bg-slate-50 border border-slate-200 rounded-xl">
-              <div>
-                <strong>Match Score:</strong> {formatScore ? formatScore(selectedCandidate.matchScore ?? 0) : `${selectedCandidate.matchScore || 0}%`}
+            {/* 4 Primary Metric Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              {/* Match Score */}
+              <div className="p-3 bg-slate-50/90 border border-slate-200/80 rounded-xl flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                    Match Compatibility
+                  </span>
+                  <strong className="text-base font-black text-indigo-600">
+                    {formatScore ? formatScore(selectedCandidate.matchScore ?? 0) : `${selectedCandidate.matchScore || 0}%`}
+                  </strong>
+                </div>
+                <span className="p-2 rounded-lg bg-indigo-50 text-indigo-600">
+                  <Award className="w-4 h-4" />
+                </span>
               </div>
-              <div>
-                <strong>Experience:</strong> {formatExperience ? formatExperience(selectedCandidate.experienceYears ?? 0) : `${selectedCandidate.experienceYears || 0} yrs`}
+
+              {/* Experience */}
+              <div className="p-3 bg-slate-50/90 border border-slate-200/80 rounded-xl flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                    Experience Level
+                  </span>
+                  <strong className="text-base font-black text-slate-800">
+                    {formatExperience ? formatExperience(selectedCandidate.experienceYears ?? 0) : `${selectedCandidate.experienceYears || 0} yrs`}
+                  </strong>
+                </div>
+                <span className="p-2 rounded-lg bg-slate-100 text-slate-600">
+                  <User className="w-4 h-4" />
+                </span>
               </div>
-              <div>
-                <strong>Email:</strong> {selectedCandidate.email || 'N/A'}
+
+              {/* Direct Email */}
+              <div className="p-3 bg-slate-50/90 border border-slate-200/80 rounded-xl flex items-center justify-between">
+                <div className="min-w-0 pr-2">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                    Direct Email
+                  </span>
+                  <a
+                    href={selectedCandidate.email ? `mailto:${selectedCandidate.email}` : undefined}
+                    className="text-xs font-bold text-slate-700 hover:text-indigo-600 truncate block transition-colors"
+                  >
+                    {selectedCandidate.email || 'N/A'}
+                  </a>
+                </div>
+                <span className="p-2 rounded-lg bg-slate-100 text-slate-600 shrink-0">
+                  <Mail className="w-4 h-4" />
+                </span>
               </div>
-              <div>
-                <strong>Phone:</strong> {selectedCandidate.phone || 'N/A'}
+
+              {/* Phone / Contact */}
+              <div className="p-3 bg-slate-50/90 border border-slate-200/80 rounded-xl flex items-center justify-between">
+                <div className="min-w-0 pr-2">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                    Contact Phone
+                  </span>
+                  <a
+                    href={selectedCandidate.phone ? `tel:${selectedCandidate.phone}` : undefined}
+                    className="text-xs font-bold text-slate-700 hover:text-indigo-600 truncate block transition-colors"
+                  >
+                    {selectedCandidate.phone || 'N/A'}
+                  </a>
+                </div>
+                <span className="p-2 rounded-lg bg-slate-100 text-slate-600 shrink-0">
+                  <Phone className="w-4 h-4" />
+                </span>
               </div>
             </div>
 
+            {/* Professional Summary */}
             {selectedCandidate.bio && (
-              <div>
-                <strong className="text-slate-800">Summary:</strong>
-                <p className="text-slate-600 mt-1">{selectedCandidate.bio}</p>
+              <div className="p-3.5 bg-slate-50/80 border border-slate-200/70 rounded-xl space-y-1">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+                  Professional Summary
+                </span>
+                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">
+                  {selectedCandidate.bio}
+                </p>
               </div>
             )}
 
             {/* Verified Skills */}
-            {selectedCandidate.skills && (
-              <div>
-                <strong className="text-slate-800">Verified Skills:</strong>
-                <div className="flex flex-wrap gap-1.5 mt-1">
+            {selectedCandidate.skills && selectedCandidate.skills.length > 0 && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                    Verified Competencies ({selectedCandidate.skills.length})
+                  </span>
+                  <span className="text-[10px] text-emerald-600 font-bold flex items-center gap-1">
+                    <Check className="w-3 h-3" /> Industry Standard Tested
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
                   {selectedCandidate.skills.map((skill, idx) => (
                     <span
                       key={idx}
-                      className="px-2 py-0.5 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-md flex items-center gap-1 font-medium"
+                      className="px-2.5 py-1 bg-indigo-50/90 text-indigo-700 border border-indigo-200/80 rounded-lg flex items-center gap-1.5 font-bold text-xs shadow-2xs"
                     >
-                      <Check size={10} /> {skill}
+                      <Check className="w-3 h-3 text-indigo-600" />
+                      <span>{skill}</span>
                     </span>
                   ))}
                 </div>
@@ -439,26 +572,50 @@ const EmployerDiscovery = () => {
             )}
 
             {/* Recruitment Pipeline Status Changer */}
-            <div className="pt-2 border-t border-slate-100 space-y-1">
-              <label className="font-semibold block text-slate-700">Update Candidate Status:</label>
-              <select
-                value={selectedCandidate.status || (CANDIDATE_STATUS?.NEW || 'New')}
-                onChange={(e) =>
-                  handleStatusChange(
-                    selectedCandidate._id || selectedCandidate.id,
-                    e.target.value
-                  )
-                }
-                className="w-full p-2 border border-slate-200 rounded-xl text-xs bg-slate-50"
-              >
-                <option value="New">New</option>
-                <option value="Shortlisted">Shortlisted</option>
-                <option value="Contacted">Contacted</option>
-                <option value="Interview Scheduled">Interview Scheduled</option>
-                <option value="Offered">Offered</option>
-                <option value="Hired">Hired</option>
-                <option value="Rejected">Rejected</option>
-              </select>
+            <div className="pt-3 border-t border-slate-200/80 space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-slate-700 block">
+                  Recruitment Pipeline Status:
+                </label>
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">
+                  Current: {selectedCandidate.status || 'New'}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <select
+                  value={selectedCandidate.status || (CANDIDATE_STATUS?.NEW || 'New')}
+                  onChange={(e) =>
+                    handleStatusChange(
+                      selectedCandidate._id || selectedCandidate.id,
+                      e.target.value
+                    )
+                  }
+                  className="flex-1 p-2.5 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all cursor-pointer"
+                >
+                  <option value="New">New Candidate</option>
+                  <option value="Shortlisted">Shortlisted</option>
+                  <option value="Contacted">Contacted</option>
+                  <option value="Interview Scheduled">Interview Scheduled</option>
+                  <option value="Offered">Offer Extended</option>
+                  <option value="Hired">Hired</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+
+                <Button
+                  size="sm"
+                  variant={selectedCandidate.isShortlisted ? 'primary' : 'outline'}
+                  onClick={() => handleToggleShortlist(selectedCandidate._id || selectedCandidate.id)}
+                  className="flex items-center gap-1.5 font-bold text-xs shrink-0"
+                >
+                  <Bookmark
+                    className={`w-3.5 h-3.5 ${
+                      selectedCandidate.isShortlisted ? 'fill-current' : ''
+                    }`}
+                  />
+                  <span>{selectedCandidate.isShortlisted ? 'Shortlisted' : 'Bookmark'}</span>
+                </Button>
+              </div>
             </div>
           </div>
         </Modal>

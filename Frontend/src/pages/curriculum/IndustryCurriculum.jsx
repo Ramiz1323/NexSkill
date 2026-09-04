@@ -143,50 +143,58 @@ export default function IndustryCurriculum() {
           <span>Co-designed with 40+ corporate hiring partners</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6 items-stretch">
           {filteredList.map((track) => (
             <Card
               key={track.id || track._id}
-              className="p-5 border border-slate-200 rounded-2xl flex flex-col justify-between hover:shadow-md transition-all space-y-4"
+              className="p-6 border border-slate-200/90 rounded-3xl flex flex-col justify-between hover:shadow-xl hover:shadow-indigo-50/80 hover:-translate-y-1 transition-all h-full"
             >
-              <div className="space-y-3">
-                <div className="flex justify-between items-start gap-2">
-                  <span className="badge-indigo px-2.5 py-0.5 text-xs font-bold rounded-lg">
+              <div className="flex flex-col flex-1">
+                {/* Top Badge Row */}
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                  <span className="badge-indigo px-3 py-1 text-xs font-bold rounded-xl shadow-xs">
                     {track.targetRole || 'Engineering'}
                   </span>
-                  <span className="badge-emerald px-2 py-0.5 text-[11px] font-bold rounded-md">
+                  <span className="badge-emerald px-2.5 py-1 text-xs font-extrabold rounded-xl">
                     {track.matchScore || 95}% Industry Match
                   </span>
                 </div>
 
-                <h3 className="font-bold text-base text-slate-900 leading-snug">{track.title}</h3>
+                {/* Track Title with min height for uniform grid */}
+                <h3 className="font-extrabold text-base sm:text-lg text-slate-900 leading-snug mb-2 min-h-[2.75rem] flex items-start">
+                  {track.title}
+                </h3>
 
+                {/* Industry Partner */}
                 {track.industryPartner && (
-                  <p className="text-xs text-slate-500 flex items-center gap-1.5">
+                  <p className="text-xs text-slate-500 font-semibold flex items-center gap-1.5 mb-3">
                     <Building className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
-                    <strong>{track.industryPartner}</strong>
+                    <span>{track.industryPartner}</span>
                   </p>
                 )}
 
-                <p className="text-xs text-slate-600 leading-relaxed line-clamp-3">
+                {/* Description */}
+                <p className="text-xs text-slate-600 leading-relaxed line-clamp-3 mb-4 flex-1">
                   {track.description}
                 </p>
 
-                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                  <span className="flex items-center gap-1">
+                {/* Meta Row */}
+                <div className="pt-3.5 pb-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                  <span className="flex items-center gap-1.5 font-medium">
                     <Clock className="w-3.5 h-3.5 text-indigo-600" /> {track.duration || '12 Weeks'}
                   </span>
                   <span className="flex items-center gap-1 text-emerald-600 font-bold">
-                    <ShieldCheck className="w-3.5 h-3.5" /> Accredited
+                    <ShieldCheck className="w-3.5 h-3.5" /> Accredited Track
                   </span>
                 </div>
               </div>
 
+              {/* Action Button */}
               <Button
                 variant="primary"
-                size="sm"
+                size="md"
                 onClick={() => handleSelectCurriculum(track)}
-                className="w-full text-xs flex items-center justify-center gap-1"
+                className="w-full text-xs font-bold py-2.5 flex items-center justify-center gap-1.5 shadow-md shadow-indigo-500/15"
               >
                 View Syllabus & Modules <ArrowRight className="w-3.5 h-3.5" />
               </Button>
