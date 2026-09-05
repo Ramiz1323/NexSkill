@@ -10,7 +10,9 @@ import {
   ShieldCheck,
   ChevronDown,
   Layers,
-  Zap
+  Zap,
+  Menu,
+  X
 } from 'lucide-react';
 import { logoutUser } from '../../redux/slices/authSlice';
 import Button from './Button';
@@ -21,9 +23,9 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [activeRole, setActiveRole] = useState('Student');
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showMobileNav, setShowMobileNav] = useState(false);
 
   const handleLogout = () => {
     dispatch(logoutUser());
@@ -31,11 +33,12 @@ const Navbar = () => {
   };
 
   const notifications = [];
+  const userPersona = user?.role || user?.persona || 'Student';
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 transition-all shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-        {/* Left: Brand Logo & SIH Tag */}
+        {/* Left: Brand Logo */}
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-2.5 group">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/25 group-hover:scale-105 transition-transform">
@@ -46,12 +49,9 @@ const Navbar = () => {
                 <span className="font-extrabold text-xl tracking-tight text-slate-900">
                   Nex<span className="text-indigo-600">Skill</span>
                 </span>
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">
-                  SIH 2026
-                </span>
               </div>
               <span className="text-[10px] text-slate-500 leading-none">
-                PS 26134 • Skill Alignment Engine
+                Skill Alignment Engine
               </span>
             </div>
           </Link>
@@ -67,28 +67,41 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Center: Ecosystem Role Switcher (Persona Demo Mode) */}
-        <div className="hidden md:flex items-center gap-1 p-1 bg-slate-100 rounded-xl border border-slate-200">
-          <span className="text-[11px] font-semibold text-slate-500 px-2 flex items-center gap-1">
-            <Zap className="w-3 h-3 text-amber-500" /> Demo Persona:
-          </span>
-          {['Student', 'Academic / Trainer', 'Employer'].map((role) => (
-            <button
-              key={role}
-              onClick={() => setActiveRole(role)}
-              className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-all ${
-                activeRole === role
-                  ? 'bg-white text-indigo-700 shadow-sm border border-slate-200/60'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              {role}
-            </button>
-          ))}
-        </div>
+        {/* Center: Main Navigation Links */}
+        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+          <Link
+            to="/"
+            className={`transition-colors hover:text-indigo-600 ${
+              location.pathname === '/' ? 'text-indigo-600 font-semibold' : 'text-slate-600'
+            }`}
+          >
+            Home
+          </Link>
+          <Link
+            to="/dashboard"
+            className={`transition-colors hover:text-indigo-600 ${
+              location.pathname.startsWith('/dashboard') ? 'text-indigo-600 font-semibold' : 'text-slate-600'
+            }`}
+          >
+            Dashboard
+          </Link>
+          <Link
+            to="/market-intelligence"
+            className={`transition-colors hover:text-indigo-600 ${
+              location.pathname === '/market-intelligence' ? 'text-indigo-600 font-semibold' : 'text-slate-600'
+            }`}
+          >
+            Market Signals
+          </Link>
+        </nav>
 
         {/* Right: Actions & Profile */}
         <div className="flex items-center gap-2.5 sm:gap-3">
+          {/* User Specific Persona Badge */}
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold">
+            <Zap className="w-3.5 h-3.5 text-indigo-600" />
+            <span>Persona: {userPersona}</span>
+          </div>
           {/* Notifications */}
           <div className="relative">
             <button
@@ -189,8 +202,53 @@ const Navbar = () => {
               </Link>
             </div>
           )}
+          {/* Mobile Navigation Toggle Button */}
+          <button
+            onClick={() => setShowMobileNav(!showMobileNav)}
+            className="p-2 rounded-xl text-slate-600 hover:bg-slate-100 border border-slate-200/60 md:hidden transition-colors"
+            aria-label="Toggle navigation menu"
+          >
+            {showMobileNav ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Nav Dropdown */}
+      {showMobileNav && (
+        <div className="md:hidden border-t border-slate-200 bg-white px-4 py-3 shadow-lg flex flex-col gap-1 animate-in slide-in-from-top-2 duration-150">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold w-fit mb-1">
+            <Zap className="w-3.5 h-3.5 text-indigo-600" />
+            <span>Persona: {userPersona}</span>
+          </div>
+          <Link
+            to="/"
+            onClick={() => setShowMobileNav(false)}
+            className={`px-3 py-2 rounded-xl text-sm font-semibold transition-colors ${
+              location.pathname === '/' ? 'bg-indigo-50 text-indigo-600 font-bold' : 'text-slate-700 hover:bg-slate-50'
+            }`}
+          >
+            Home
+          </Link>
+          <Link
+            to="/dashboard"
+            onClick={() => setShowMobileNav(false)}
+            className={`px-3 py-2 rounded-xl text-sm font-semibold transition-colors ${
+              location.pathname.startsWith('/dashboard') ? 'bg-indigo-50 text-indigo-600 font-bold' : 'text-slate-700 hover:bg-slate-50'
+            }`}
+          >
+            Dashboard
+          </Link>
+          <Link
+            to="/market-intelligence"
+            onClick={() => setShowMobileNav(false)}
+            className={`px-3 py-2 rounded-xl text-sm font-semibold transition-colors ${
+              location.pathname === '/market-intelligence' ? 'bg-indigo-50 text-indigo-600 font-bold' : 'text-slate-700 hover:bg-slate-50'
+            }`}
+          >
+            Market Signals
+          </Link>
+        </div>
+      )}
     </header>
   );
 };

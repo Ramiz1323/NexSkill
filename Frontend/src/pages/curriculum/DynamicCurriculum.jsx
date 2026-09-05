@@ -63,7 +63,7 @@ export default function DynamicCurriculum() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-indigo text-xs font-bold mb-2">
             <GitMerge className="w-3.5 h-3.5" />
-            <span>Module 6: Dynamic Feedback & Adaptive Remediation</span>
+            <span>Dynamic Feedback & Adaptive Remediation</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             Dynamic & Adaptive Learning Engine

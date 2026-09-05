@@ -70,7 +70,7 @@ export default function MarketIntelligence() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-indigo text-xs font-bold mb-2">
             <TrendingUp className="w-3.5 h-3.5" />
-            <span>Module 1: Real-Time Labour Market Intelligence</span>
+            <span>Real-Time Labour Market Intelligence</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             Labour Market Intelligence & Demand Signals
@@ -150,20 +150,20 @@ export default function MarketIntelligence() {
       </Card>
 
       {/* Summary Stat Cards */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-        <Card className="p-5">
+      <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
+        <Card className="p-4 sm:p-5 min-w-0">
           <span className="text-xs font-semibold text-slate-500 block">Total Active Postings</span>
-          <div className="text-3xl font-extrabold text-slate-900 mt-1">
+          <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1 tracking-tight">
             {summary?.totalActivePostings ? summary.totalActivePostings.toLocaleString() : '184,500'}
           </div>
           <span className="text-[11px] font-bold text-emerald-600 flex items-center gap-1 mt-1.5">
-            <ArrowUpRight className="w-3.5 h-3.5" /> {summary?.monthlyHiringPace || '+18.4%'} monthly pace
+            <ArrowUpRight className="w-3.5 h-3.5 shrink-0" /> {summary?.monthlyHiringPace || '+18.4%'} monthly pace
           </span>
         </Card>
 
-        <Card className="p-5">
+        <Card className="p-4 sm:p-5 min-w-0">
           <span className="text-xs font-semibold text-slate-500 block">Talent Deficit Ratio</span>
-          <div className="text-3xl font-extrabold text-indigo-600 mt-1">
+          <div className="text-2xl sm:text-3xl font-extrabold text-indigo-600 mt-1 tracking-tight">
             {summary?.talentDeficitRatio || '1 : 3.8'}
           </div>
           <span className="text-[11px] text-slate-500 mt-1.5 block">
@@ -171,23 +171,23 @@ export default function MarketIntelligence() {
           </span>
         </Card>
 
-        <Card className="p-5">
+        <Card className="p-4 sm:p-5 min-w-0">
           <span className="text-xs font-semibold text-slate-500 block">Top Demanded Domain</span>
-          <div className="text-xl font-extrabold text-slate-900 mt-1">
+          <div className="text-lg sm:text-xl font-extrabold text-slate-900 mt-1 truncate">
             {summary?.topEmergingSkill || 'Full-Stack AI Developer'}
           </div>
-          <span className="text-[11px] font-bold text-indigo-600 mt-1.5 block">
+          <span className="text-[11px] font-bold text-indigo-600 mt-1.5 block truncate">
             ₹16 - 28 LPA Average Benchmark
           </span>
         </Card>
 
-        <Card className="p-5">
+        <Card className="p-4 sm:p-5 min-w-0">
           <span className="text-xs font-semibold text-slate-500 block">Assessed Institutions</span>
-          <div className="text-3xl font-extrabold text-slate-900 mt-1">
+          <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1 tracking-tight">
             {summary?.topTierInstitutionsAssessed || '142+'}
           </div>
           <span className="text-[11px] font-semibold text-emerald-600 flex items-center gap-1 mt-1.5">
-            <ShieldCheck className="w-3.5 h-3.5" /> 8,400+ credentials validated
+            <ShieldCheck className="w-3.5 h-3.5 shrink-0" /> 8,400+ credentials validated
           </span>
         </Card>
       </section>

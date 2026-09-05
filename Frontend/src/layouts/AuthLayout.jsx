@@ -20,7 +20,7 @@ const AuthLayout = () => {
             <span className="font-extrabold text-2xl tracking-tight text-slate-900 leading-none">
               Nex<span className="text-indigo-600">Skill</span>
             </span>
-            <span className="text-[10px] text-slate-500">SIH 2026 Prototype • PS 26134</span>
+            <span className="text-[10px] text-slate-500">AI-Powered Skill Alignment Platform</span>
           </div>
         </Link>
       </header>

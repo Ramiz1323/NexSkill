@@ -23,15 +23,9 @@ import SkillAssessment from '../pages/assessment/SkillAssessment';
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Public Routes wrapped in MainLayout */}
+      {/* Public Landing Route wrapped in MainLayout */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/market-intelligence" element={<MarketIntelligence />} />
-        <Route path="/industry-curriculum" element={<IndustryCurriculum />} />
-        <Route path="/curriculum/industry" element={<IndustryCurriculum />} />
-        <Route path="/dynamic-curriculum" element={<DynamicCurriculum />} />
-        <Route path="/curriculum/dynamic" element={<DynamicCurriculum />} />
-        <Route path="/demand-forecasting" element={<DemandForecasting />} />
       </Route>
 
       {/* Auth Routes wrapped in AuthLayout */}
