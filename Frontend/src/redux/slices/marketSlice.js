@@ -94,7 +94,12 @@ const marketSlice = createSlice({
       })
       .addCase(fetchMarketDemandTrends.fulfilled, (state, action) => {
         state.loading = false;
-        state.demandTrends = action.payload;
+        const payload = action.payload;
+        state.demandTrends = Array.isArray(payload)
+          ? payload
+          : Array.isArray(payload?.data)
+          ? payload.data
+          : [];
       })
       .addCase(fetchMarketDemandTrends.rejected, (state, action) => {
         state.loading = false;
@@ -108,7 +113,12 @@ const marketSlice = createSlice({
       })
       .addCase(fetchSkillDistribution.fulfilled, (state, action) => {
         state.loading = false;
-        state.skillDistribution = action.payload;
+        const payload = action.payload;
+        state.skillDistribution = Array.isArray(payload)
+          ? payload
+          : Array.isArray(payload?.data)
+          ? payload.data
+          : [];
       })
       .addCase(fetchSkillDistribution.rejected, (state, action) => {
         state.loading = false;
@@ -122,7 +132,8 @@ const marketSlice = createSlice({
       })
       .addCase(fetchMarketSummary.fulfilled, (state, action) => {
         state.loading = false;
-        state.summary = action.payload;
+        const payload = action.payload;
+        state.summary = payload?.data ?? payload ?? {};
       })
       .addCase(fetchMarketSummary.rejected, (state, action) => {
         state.loading = false;

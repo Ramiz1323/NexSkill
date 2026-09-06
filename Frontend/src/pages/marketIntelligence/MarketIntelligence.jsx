@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   TrendingUp,
@@ -11,7 +11,8 @@ import {
   Layers,
   ArrowUpRight,
   ShieldCheck,
-  Zap
+  Zap,
+  CheckCircle2
 } from 'lucide-react';
 import {
   fetchMarketDemandTrends,
@@ -38,6 +39,9 @@ export default function MarketIntelligence() {
     error,
   } = useSelector((state) => state.market);
 
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [justRefreshed, setJustRefreshed] = useState(false);
+
   useEffect(() => {
     dispatch(fetchMarketDemandTrends(filters));
     dispatch(fetchSkillDistribution(filters));
@@ -56,11 +60,22 @@ export default function MarketIntelligence() {
     dispatch(setTimeframeFilter(e.target.value));
   };
 
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
     dispatch(clearMarketErrors());
-    dispatch(fetchMarketDemandTrends(filters));
-    dispatch(fetchSkillDistribution(filters));
-    dispatch(fetchMarketSummary(filters));
+    try {
+      await Promise.all([
+        dispatch(fetchMarketDemandTrends({ ...filters, _t: Date.now() })).unwrap(),
+        dispatch(fetchSkillDistribution({ ...filters, _t: Date.now() })).unwrap(),
+        dispatch(fetchMarketSummary({ ...filters, _t: Date.now() })).unwrap(),
+      ]);
+      setJustRefreshed(true);
+      setTimeout(() => setJustRefreshed(false), 2000);
+    } catch (err) {
+      console.error('Failed to refresh market signals:', err);
+    } finally {
+      setIsRefreshing(false);
+    }
   };
 
   return (
@@ -79,8 +94,24 @@ export default function MarketIntelligence() {
             Real-time hiring velocity, regional salary benchmarks, and tech sector skill distribution.
           </p>
         </div>
-        <Button variant="primary" size="sm" onClick={handleRefresh} className="flex items-center gap-2">
-          <RotateCcw className="w-4 h-4" /> Refresh Signals
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={handleRefresh}
+          disabled={isRefreshing}
+          className="flex items-center gap-2 font-semibold shadow-sm transition-all"
+        >
+          {justRefreshed ? (
+            <>
+              <CheckCircle2 className="w-4 h-4 text-emerald-200" />
+              <span>Signals Refreshed</span>
+            </>
+          ) : (
+            <>
+              <RotateCcw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <span>{isRefreshing ? 'Refreshing Signals...' : 'Refresh Signals'}</span>
+            </>
+          )}
         </Button>
       </header>
 
@@ -227,7 +258,10 @@ export default function MarketIntelligence() {
                   <span className="font-bold text-indigo-600">{item.weight}%</span>
                 </div>
                 <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mb-2">
-                  <div className="h-full bg-indigo-600 rounded-full" style={{ width: `${item.weight * 2.5}%` }} />
+                  <div
+                    className="h-full bg-indigo-600 rounded-full transition-all duration-300"
+                    style={{ width: `${Math.min(Math.max(item.weight || 0, 0), 100)}%` }}
+                  />
                 </div>
                 {item.topSkills && (
                   <div className="flex flex-wrap gap-1">

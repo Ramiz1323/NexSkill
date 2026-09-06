@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   LineChart,
@@ -40,6 +40,9 @@ export default function DemandForecasting() {
     error,
   } = useSelector((state) => state.demand);
 
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [justRefreshed, setJustRefreshed] = useState(false);
+
   useEffect(() => {
     dispatch(fetchSkillForecast({ horizon: forecastHorizon }));
     dispatch(fetchEmergingRoles({ horizon: forecastHorizon }));
@@ -50,11 +53,22 @@ export default function DemandForecasting() {
     dispatch(setForecastHorizon(e.target.value));
   };
 
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
     dispatch(clearDemandErrors());
-    dispatch(fetchSkillForecast({ horizon: forecastHorizon }));
-    dispatch(fetchEmergingRoles({ horizon: forecastHorizon }));
-    dispatch(fetchAutomationAnalysis({ horizon: forecastHorizon }));
+    try {
+      await Promise.all([
+        dispatch(fetchSkillForecast({ horizon: forecastHorizon, _t: Date.now() })).unwrap(),
+        dispatch(fetchEmergingRoles({ horizon: forecastHorizon, _t: Date.now() })).unwrap(),
+        dispatch(fetchAutomationAnalysis({ horizon: forecastHorizon, _t: Date.now() })).unwrap(),
+      ]);
+      setJustRefreshed(true);
+      setTimeout(() => setJustRefreshed(false), 2000);
+    } catch (err) {
+      console.error('Failed to refresh demand forecasting data:', err);
+    } finally {
+      setIsRefreshing(false);
+    }
   };
 
   const getAdoptionBadgeStyle = (adoption = '') => {
@@ -176,10 +190,20 @@ export default function DemandForecasting() {
             variant="outline"
             size="sm"
             onClick={handleRefresh}
-            className="flex items-center gap-2 font-semibold shadow-sm"
+            disabled={isRefreshing}
+            className="flex items-center gap-2 font-semibold shadow-sm transition-all"
           >
-            <RotateCcw className="w-3.5 h-3.5 text-indigo-600" />
-            <span>Refresh</span>
+            {justRefreshed ? (
+              <>
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                <span className="text-emerald-700">Refreshed</span>
+              </>
+            ) : (
+              <>
+                <RotateCcw className={`w-3.5 h-3.5 text-indigo-600 ${isRefreshing ? 'animate-spin' : ''}`} />
+                <span>{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
+              </>
+            )}
           </Button>
         </div>
       </header>

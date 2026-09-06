@@ -32,6 +32,25 @@ export const enrollTrainerInProgramApi = async (programData) => {
 export const enrollTrainerProgramApi = enrollTrainerInProgramApi;
 
 /**
+ * Unenroll faculty/trainer from an industry development program
+ * @param {string|Object} programData
+ */
+export const unenrollTrainerProgramApi = async (programData) => {
+  const id = typeof programData === 'string' ? programData : programData?.programId || programData?.id;
+  const payload = typeof programData === 'object' && programData !== null ? programData : { programId: id };
+  const response = await axiosClient.post(`/trainer/programs/${id}/unenroll`, payload);
+  return response.data || response;
+};
+
+/**
+ * Fetch list of enrolled programs for the faculty
+ */
+export const getEnrolledProgramsApi = async () => {
+  const response = await axiosClient.get('/trainer/enrolled');
+  return response.data || response;
+};
+
+/**
  * Fetch faculty earned and available industry certifications
  */
 export const getTrainerCertificationsApi = async () => {
@@ -44,6 +63,8 @@ const trainerDevApi = {
   getTrainerProgramByIdApi,
   enrollTrainerInProgramApi,
   enrollTrainerProgramApi,
+  unenrollTrainerProgramApi,
+  getEnrolledProgramsApi,
   getTrainerCertificationsApi,
 };
 

@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchTrainerPrograms,
   fetchTrainerProgramDetails,
   enrollTrainerProgram,
+  unenrollTrainerProgram,
+  fetchEnrolledPrograms,
   fetchTrainerCertifications,
   setTrainerFilters,
   clearTrainerFilters,
@@ -37,7 +39,9 @@ import {
   Sparkles,
   Layers,
   ArrowRight,
-  Check
+  Check,
+  X,
+  SlidersHorizontal
 } from 'lucide-react';
 
 const TrainerDevelopment = () => {
@@ -54,10 +58,29 @@ const TrainerDevelopment = () => {
 
   const [searchInput, setSearchInput] = useState(filters.search || '');
 
-  // Fetch programs and certifications on mount and filter changes
+  // Computed displayed enrolled programs from live programs and enrolled state
+  const displayedEnrolledPrograms = useMemo(() => {
+    const map = new Map();
+    (programs || []).forEach((p) => {
+      if (p.isEnrolled) {
+        const id = String(p._id || p.id);
+        if (id) map.set(id, p);
+      }
+    });
+    (enrolledPrograms || []).forEach((p) => {
+      const id = String(p._id || p.id);
+      if (id) {
+        map.set(id, { ...(map.get(id) || {}), ...p });
+      }
+    });
+    return Array.from(map.values());
+  }, [programs, enrolledPrograms]);
+
+  // Fetch programs, enrolled programs, and certifications on mount and filter changes
   useEffect(() => {
     dispatch(fetchTrainerPrograms(filters));
     dispatch(fetchTrainerCertifications());
+    dispatch(fetchEnrolledPrograms());
   }, [dispatch, filters]);
 
   const handleSearchSubmit = (e) => {
@@ -84,6 +107,10 @@ const TrainerDevelopment = () => {
 
   const handleEnroll = (programId) => {
     dispatch(enrollTrainerProgram(programId));
+  };
+
+  const handleUnenroll = (programId) => {
+    dispatch(unenrollTrainerProgram(programId));
   };
 
   const getModeBadge = (mode = '') => {
@@ -144,73 +171,156 @@ const TrainerDevelopment = () => {
         </div>
       )}
 
-      {/* Filter Bar */}
-      <Card className="p-4 sm:p-5 space-y-3.5">
-        <form onSubmit={handleSearchSubmit} className="flex gap-2">
+      {/* Search & Filter Controls Card */}
+      <Card className="p-5 sm:p-6 space-y-4 rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-sm">
+        {/* Search Input & Button Row */}
+        <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-2.5 items-stretch">
           <div className="relative flex-1">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
               placeholder="Search programs by tech stack or topic (e.g. AI, Cloud, Embedded Systems)..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="w-full pl-9 pr-3.5 py-2.5 border border-slate-200 rounded-xl text-xs bg-slate-50 focus:bg-white text-slate-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all"
+              className="w-full pl-10 pr-9 h-11 border border-slate-200 rounded-xl text-xs sm:text-sm bg-slate-50/70 focus:bg-white text-slate-900 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all"
             />
+            {searchInput && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchInput('');
+                  dispatch(setTrainerFilters({ search: '' }));
+                }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 rounded-md cursor-pointer"
+                title="Clear search"
+              >
+                <X size={14} />
+              </button>
+            )}
           </div>
-          <Button type="submit" variant="primary" size="sm" className="flex items-center gap-1.5 px-4 font-bold">
-            <Search size={14} /> Search
+          <Button
+            type="submit"
+            variant="primary"
+            size="md"
+            className="h-11 px-6 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm shadow-indigo-500/20 hover:shadow-indigo-500/30 transition-all shrink-0"
+          >
+            <Search size={15} />
+            <span>Search</span>
           </Button>
         </form>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
-          {/* Category Filter */}
-          <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider mb-1 text-slate-600">
-              Program Type
-            </label>
-            <select
-              value={filters.category}
-              onChange={handleCategoryChange}
-              className="w-full p-2.5 border border-slate-200 rounded-xl text-xs font-semibold bg-slate-50 focus:bg-white text-slate-800 outline-none cursor-pointer"
-            >
-              <option value="">All Program Types</option>
-              {TRAINER_PROGRAM_TYPES &&
-                Object.entries(TRAINER_PROGRAM_TYPES).map(([key, label]) => (
-                  <option key={key} value={label}>
-                    {label}
-                  </option>
-                ))}
-            </select>
+        {/* Filter Dropdowns & Reset Row */}
+        <div className="pt-3.5 border-t border-slate-100">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4 items-end">
+            {/* Category Filter */}
+            <div>
+              <label className="flex items-center gap-1.5 text-xs font-bold text-slate-700 mb-1.5">
+                <GraduationCap className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
+                <span>Program Type</span>
+              </label>
+              <select
+                value={filters.category}
+                onChange={handleCategoryChange}
+                className="w-full h-10 px-3 border border-slate-200 rounded-xl text-xs font-semibold bg-slate-50/70 hover:bg-slate-50 focus:bg-white text-slate-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none cursor-pointer transition-all"
+              >
+                <option value="">All Program Types</option>
+                {TRAINER_PROGRAM_TYPES &&
+                  Object.entries(TRAINER_PROGRAM_TYPES).map(([key, label]) => (
+                    <option key={key} value={label}>
+                      {label}
+                    </option>
+                  ))}
+              </select>
+            </div>
+
+            {/* Delivery Mode Filter */}
+            <div>
+              <label className="flex items-center gap-1.5 text-xs font-bold text-slate-700 mb-1.5">
+                <Calendar className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
+                <span>Delivery Mode</span>
+              </label>
+              <select
+                value={filters.mode}
+                onChange={handleModeChange}
+                className="w-full h-10 px-3 border border-slate-200 rounded-xl text-xs font-semibold bg-slate-50/70 hover:bg-slate-50 focus:bg-white text-slate-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none cursor-pointer transition-all"
+              >
+                <option value="">All Delivery Modes</option>
+                <option value="Online">Online / Self-Paced</option>
+                <option value="Hybrid">Hybrid Cohort</option>
+                <option value="On-site">On-site Industry Workshop</option>
+              </select>
+            </div>
+
+            {/* Reset Filters */}
+            <div>
+              <label className="flex items-center gap-1.5 text-xs font-bold text-slate-400 mb-1.5">
+                <SlidersHorizontal className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <span>Actions</span>
+              </label>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleResetFilters}
+                className="w-full h-10 rounded-xl flex items-center justify-center gap-2 font-bold text-xs border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:border-slate-300 transition-all shadow-xs"
+              >
+                <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
+                <span>Reset Filters</span>
+              </Button>
+            </div>
           </div>
 
-          {/* Delivery Mode Filter */}
-          <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider mb-1 text-slate-600">
-              Delivery Mode
-            </label>
-            <select
-              value={filters.mode}
-              onChange={handleModeChange}
-              className="w-full p-2.5 border border-slate-200 rounded-xl text-xs font-semibold bg-slate-50 focus:bg-white text-slate-800 outline-none cursor-pointer"
-            >
-              <option value="">All Delivery Modes</option>
-              <option value="Online">Online / Self-Paced</option>
-              <option value="Hybrid">Hybrid Cohort</option>
-              <option value="On-site">On-site Industry Workshop</option>
-            </select>
-          </div>
-
-          {/* Reset Filters */}
-          <div>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={handleResetFilters}
-              className="w-full py-2.5 flex items-center justify-center gap-1.5 font-bold text-xs"
-            >
-              <RotateCcw size={14} /> Reset Filters
-            </Button>
-          </div>
+          {/* Active Filter Chips */}
+          {(filters.category || filters.mode || filters.search) && (
+            <div className="flex flex-wrap items-center gap-2 pt-3 mt-3 border-t border-slate-100 text-xs">
+              <span className="font-semibold text-slate-500 text-[11px]">Active Filters:</span>
+              {filters.search && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-bold">
+                  <span>Search: &ldquo;{filters.search}&rdquo;</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchInput('');
+                      dispatch(setTrainerFilters({ search: '' }));
+                    }}
+                    className="hover:text-indigo-900 ml-0.5 cursor-pointer"
+                  >
+                    <X size={12} />
+                  </button>
+                </span>
+              )}
+              {filters.category && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-bold">
+                  <span>{filters.category}</span>
+                  <button
+                    type="button"
+                    onClick={() => dispatch(setTrainerFilters({ category: '' }))}
+                    className="hover:text-indigo-900 ml-0.5 cursor-pointer"
+                  >
+                    <X size={12} />
+                  </button>
+                </span>
+              )}
+              {filters.mode && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-bold">
+                  <span>{filters.mode}</span>
+                  <button
+                    type="button"
+                    onClick={() => dispatch(setTrainerFilters({ mode: '' }))}
+                    className="hover:text-indigo-900 ml-0.5 cursor-pointer"
+                  >
+                    <X size={12} />
+                  </button>
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={handleResetFilters}
+                className="text-xs font-bold text-indigo-600 hover:text-indigo-800 underline ml-1 cursor-pointer"
+              >
+                Clear all
+              </button>
+            </div>
+          )}
         </div>
       </Card>
 
@@ -250,7 +360,7 @@ const TrainerDevelopment = () => {
               const programId = program._id || program.id;
               const isEnrolled =
                 program.isEnrolled ||
-                enrolledPrograms.some((ep) => ep._id === programId || ep.id === programId);
+                displayedEnrolledPrograms.some((ep) => String(ep._id || ep.id) === String(programId));
               const modeBadge = getModeBadge(program.mode);
 
               return (
@@ -352,12 +462,12 @@ const TrainerDevelopment = () => {
         <Card className="p-5 sm:p-6 space-y-3.5 flex flex-col justify-between">
           <div>
             <h3 className="font-extrabold text-base sm:text-lg text-slate-900 flex items-center gap-2">
-              <BookOpen size={18} className="text-indigo-600" /> My Enrolled Programs ({enrolledPrograms.length})
+              <BookOpen size={18} className="text-indigo-600" /> My Enrolled Programs ({displayedEnrolledPrograms.length})
             </h3>
             <p className="text-xs text-slate-500 mt-0.5 mb-3">
               Active tracks and cohorts currently in progress.
             </p>
-            {enrolledPrograms.length === 0 ? (
+            {displayedEnrolledPrograms.length === 0 ? (
               <div className="p-6 bg-slate-50 border border-slate-200/80 rounded-2xl text-center space-y-1">
                 <p className="text-xs font-semibold text-slate-500">
                   You are not currently enrolled in any faculty upskilling cohorts.
@@ -368,18 +478,39 @@ const TrainerDevelopment = () => {
               </div>
             ) : (
               <div className="space-y-2.5">
-                {enrolledPrograms.map((item, idx) => (
-                  <div key={idx} className="p-3.5 border border-slate-200/90 bg-slate-50/90 rounded-2xl text-xs flex items-center justify-between gap-3 hover:border-indigo-200 transition-all">
-                    <div className="min-w-0 flex-1">
-                      <strong className="text-slate-900 font-bold block text-sm truncate">{item.title || `Program #${item.id || item._id || idx + 1}`}</strong>
-                      <p className="text-slate-500 text-xs mt-0.5 truncate">Status: <span className="font-semibold text-indigo-600">In Progress</span></p>
+                {displayedEnrolledPrograms.map((item, idx) => {
+                  const pId = item._id || item.id;
+                  return (
+                    <div key={pId || idx} className="p-3.5 border border-slate-200/90 bg-slate-50/90 rounded-2xl text-xs flex items-center justify-between gap-3 hover:border-indigo-200 transition-all">
+                      <div className="min-w-0 flex-1">
+                        <strong className="text-slate-900 font-bold block text-sm truncate">
+                          {item.title || `Program #${pId || idx + 1}`}
+                        </strong>
+                        <p className="text-slate-500 text-xs mt-0.5 truncate">
+                          {item.partner ? `${item.partner} • ` : ''}
+                          Status: <span className="font-semibold text-indigo-600">In Progress</span>
+                          {item.duration ? ` • ${item.duration}` : ''}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="shrink-0 whitespace-nowrap inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-extrabold shadow-2xs">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          <span>Active</span>
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          disabled={actionLoading}
+                          onClick={() => handleUnenroll(pId)}
+                          className="text-[11px] text-slate-400 hover:text-rose-600 hover:bg-rose-50 px-2 py-1 rounded-lg h-auto"
+                          title="Withdraw from cohort"
+                        >
+                          Withdraw
+                        </Button>
+                      </div>
                     </div>
-                    <span className="shrink-0 whitespace-nowrap inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-extrabold shadow-2xs">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                      <span>Active</span>
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -498,22 +629,31 @@ const TrainerDevelopment = () => {
               <Button variant="secondary" size="sm" onClick={() => dispatch(clearSelectedProgram())} className="font-semibold text-xs">
                 Close
               </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                disabled={
-                  selectedProgram.isEnrolled ||
-                  enrolledPrograms.some(
-                    (ep) =>
-                      ep._id === (selectedProgram._id || selectedProgram.id) ||
-                      ep.id === (selectedProgram._id || selectedProgram.id)
-                  )
-                }
-                onClick={() => handleEnroll(selectedProgram._id || selectedProgram.id)}
-                className="font-bold text-xs"
-              >
-                {selectedProgram.isEnrolled ? 'Enrolled' : 'Confirm Faculty Enrollment'}
-              </Button>
+              {displayedEnrolledPrograms.some(
+                (ep) =>
+                  String(ep._id || ep.id) ===
+                  String(selectedProgram._id || selectedProgram.id)
+              ) ? (
+                <Button
+                  variant="danger"
+                  size="sm"
+                  disabled={actionLoading}
+                  onClick={() => handleUnenroll(selectedProgram._id || selectedProgram.id)}
+                  className="font-bold text-xs"
+                >
+                  Withdraw from Program
+                </Button>
+              ) : (
+                <Button
+                  variant="primary"
+                  size="sm"
+                  disabled={actionLoading}
+                  onClick={() => handleEnroll(selectedProgram._id || selectedProgram.id)}
+                  className="font-bold text-xs"
+                >
+                  Confirm Faculty Enrollment
+                </Button>
+              )}
             </div>
           </div>
         </Modal>
