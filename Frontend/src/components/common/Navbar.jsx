@@ -33,7 +33,14 @@ const Navbar = () => {
   };
 
   const notifications = [];
-  const userPersona = user?.role || user?.persona || 'Student';
+
+  const formatPersona = (val) => {
+    if (!val) return '';
+    const str = String(val).trim();
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
+
+  const userPersona = formatPersona(user?.role || user?.persona);
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 transition-all shadow-sm">
@@ -97,11 +104,13 @@ const Navbar = () => {
 
         {/* Right: Actions & Profile */}
         <div className="flex items-center gap-2.5 sm:gap-3">
-          {/* User Specific Persona Badge */}
-          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold">
-            <Zap className="w-3.5 h-3.5 text-indigo-600" />
-            <span>Persona: {userPersona}</span>
-          </div>
+          {/* User Specific Persona Badge (Visible only after login) */}
+          {isAuthenticated && userPersona && (
+            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold">
+              <Zap className="w-3.5 h-3.5 text-indigo-600" />
+              <span>Persona: {userPersona}</span>
+            </div>
+          )}
           {/* Notifications */}
           <div className="relative">
             <button
@@ -216,10 +225,12 @@ const Navbar = () => {
       {/* Mobile Nav Dropdown */}
       {showMobileNav && (
         <div className="md:hidden border-t border-slate-200 bg-white px-4 py-3 shadow-lg flex flex-col gap-1 animate-in slide-in-from-top-2 duration-150">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold w-fit mb-1">
-            <Zap className="w-3.5 h-3.5 text-indigo-600" />
-            <span>Persona: {userPersona}</span>
-          </div>
+          {isAuthenticated && userPersona && (
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold w-fit mb-1">
+              <Zap className="w-3.5 h-3.5 text-indigo-600" />
+              <span>Persona: {userPersona}</span>
+            </div>
+          )}
           <Link
             to="/"
             onClick={() => setShowMobileNav(false)}
