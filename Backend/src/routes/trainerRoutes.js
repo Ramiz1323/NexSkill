@@ -35,7 +35,18 @@ router.get(
   })
 );
 
-// 2. Get Program Details by ID from MongoDB
+// 2. Get Enrolled Programs List
+router.get(
+  ['/enrolled', '/enrolled-programs'],
+  asyncHandler(async (req, res) => {
+    const programs = await TrainerProgram.find({ isEnrolled: true }).sort({ updatedAt: -1 }).lean();
+    return res.status(200).json(
+      new ApiResponse(200, { programs }, 'Enrolled trainer programs fetched successfully')
+    );
+  })
+);
+
+// 3. Get Program Details by ID from MongoDB
 router.get(
   '/programs/:id',
   asyncHandler(async (req, res) => {
@@ -43,7 +54,6 @@ router.get(
     try {
       program = await TrainerProgram.findById(req.params.id).lean();
     } catch (err) {
-      // Fallback findOne by title or id string
       program = await TrainerProgram.findOne({
         $or: [{ _id: req.params.id }, { id: req.params.id }],
       }).lean();
@@ -59,7 +69,7 @@ router.get(
   })
 );
 
-// 3. Enroll Faculty in MongoDB Program
+// 4. Enroll Faculty in MongoDB Program
 router.post(
   ['/programs/:id/enroll', '/enroll'],
   asyncHandler(async (req, res) => {
@@ -77,9 +87,13 @@ router.post(
     }
 
     if (!program) {
-      program = await TrainerProgram.findOne({
-        $or: [{ _id: programId }, { id: programId }],
-      }).lean();
+      try {
+        program = await TrainerProgram.findOneAndUpdate(
+          { $or: [{ _id: programId }, { id: programId }] },
+          { $set: { isEnrolled: true } },
+          { new: true }
+        ).lean();
+      } catch (e) {}
     }
 
     return res.status(201).json(
@@ -92,7 +106,44 @@ router.post(
   })
 );
 
-// 4. Get Certifications from MongoDB
+// 5. Unenroll Faculty from MongoDB Program
+router.post(
+  ['/programs/:id/unenroll', '/unenroll'],
+  asyncHandler(async (req, res) => {
+    const programId = req.params.id || req.body?.programId || req.body?.id;
+    let program = null;
+
+    try {
+      program = await TrainerProgram.findByIdAndUpdate(
+        programId,
+        { $set: { isEnrolled: false } },
+        { new: true }
+      ).lean();
+    } catch (err) {
+      // Fallback
+    }
+
+    if (!program) {
+      try {
+        program = await TrainerProgram.findOneAndUpdate(
+          { $or: [{ _id: programId }, { id: programId }] },
+          { $set: { isEnrolled: false } },
+          { new: true }
+        ).lean();
+      } catch (e) {}
+    }
+
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        { program: { ...(program || {}), isEnrolled: false } },
+        'Faculty successfully unenrolled from program'
+      )
+    );
+  })
+);
+
+// 6. Get Certifications from MongoDB
 router.get(
   '/certifications',
   asyncHandler(async (req, res) => {
