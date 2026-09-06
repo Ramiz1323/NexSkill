@@ -19,10 +19,27 @@ const ProgressChart = ({ data = [] }) => {
   }
 
   // Format data keys if needed
-  const chartData = data.map((item) => ({
-    name: item.skill || item.name || 'Skill',
-    proficiency: typeof item.proficiency === 'number' ? item.proficiency : item.progress || 0,
-  }));
+  const chartData = data.map((item, index) => {
+    const rawName = item.skill || item.skillName || item.name || item.title || `Skill ${index + 1}`;
+    let name = rawName;
+    if (name.includes('&')) {
+      name = name.split('&')[0].trim();
+    }
+    const proficiency =
+      typeof item.proficiency === 'number'
+        ? item.proficiency
+        : typeof item.progress === 'number'
+        ? item.progress
+        : typeof item.score === 'number'
+        ? item.score
+        : 75;
+
+    return {
+      name,
+      fullName: rawName,
+      proficiency,
+    };
+  });
 
   return (
     <div className="progress-chart-container w-full h-64">
@@ -31,7 +48,15 @@ const ProgressChart = ({ data = [] }) => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis domain={[0, 100]} unit="%" />
-          <Tooltip formatter={(value) => [`${value}%`, 'Proficiency']} />
+          <Tooltip
+            formatter={(value) => [`${value}%`, 'Proficiency']}
+            labelFormatter={(label, payload) => {
+              if (payload && payload.length > 0 && payload[0].payload?.fullName) {
+                return payload[0].payload.fullName;
+              }
+              return label;
+            }}
+          />
           <Bar dataKey="proficiency" fill="#3B82F6" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>

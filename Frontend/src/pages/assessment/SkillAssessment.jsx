@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import {
   Clock,
   ShieldCheck,
@@ -20,6 +21,23 @@ import Card from '../../components/common/Card';
 
 export default function SkillAssessment() {
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
+
+  const userName = user?.name || (user?.email ? user.email.split('@')[0] : 'NexSkill Candidate');
+  const userId = user?.id || user?._id
+    ? `NX-${String(user.id || user._id).slice(-4).toUpperCase()}`
+    : 'NX-2026-8841';
+
+  const getInitials = (name) => {
+    if (!name) return 'U';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
+  };
+
+  const userInitials = getInitials(userName);
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(6); // 7th question (0-indexed)
   const [selectedOption, setSelectedOption] = useState('B');
@@ -122,11 +140,11 @@ export default function SkillAssessment() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 text-right">
             <div>
-              <div className="text-xs font-bold text-slate-900">Aarav Sharma</div>
-              <div className="text-[10px] font-mono text-slate-400">ID: NX-2026-8841</div>
+              <div className="text-xs font-bold text-slate-900">{userName}</div>
+              <div className="text-[10px] font-mono text-slate-400">ID: {userId}</div>
             </div>
             <div className="w-9 h-9 rounded-xl bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-sm">
-              AS
+              {userInitials}
             </div>
           </div>
           <button className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors">

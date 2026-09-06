@@ -6,8 +6,12 @@ export const loginUser = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const data = await loginApi(credentials);
-      if (data.token) {
+      if (data?.token) {
         localStorage.setItem('token', data.token);
+      }
+      const user = data?.user || (data?.role ? data : null);
+      if (user) {
+        localStorage.setItem('user', JSON.stringify(user));
       }
       return data;
     } catch (err) {
@@ -23,8 +27,12 @@ export const registerUser = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const data = await registerApi(userData);
-      if (data.token) {
+      if (data?.token) {
         localStorage.setItem('token', data.token);
+      }
+      const user = data?.user || (data?.role ? data : null);
+      if (user) {
+        localStorage.setItem('user', JSON.stringify(user));
       }
       return data;
     } catch (err) {
@@ -40,6 +48,10 @@ export const fetchCurrentUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const data = await getCurrentUserApi();
+      const user = data?.user || data;
+      if (user) {
+        localStorage.setItem('user', JSON.stringify(user));
+      }
       return data;
     } catch (err) {
       return rejectWithValue(
@@ -58,21 +70,29 @@ export const logoutUser = createAsyncThunk(
       // Ignore network errors on logout
     } finally {
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
     }
   }
 );
 
 const storedToken = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+let storedUser = null;
+if (typeof window !== 'undefined') {
+  try {
+    const rawUser = localStorage.getItem('user');
+    storedUser = rawUser ? JSON.parse(rawUser) : null;
+  } catch (err) {
+    storedUser = null;
+  }
+}
 
 const initialState = {
-  user: null,
+  user: storedUser,
   token: storedToken,
   isAuthenticated: Boolean(storedToken),
   loading: false,
   error: null,
 };
-
-
 
 const authSlice = createSlice({
   name: 'auth',
@@ -88,6 +108,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = null;
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
     },
   },
   extraReducers: (builder) => {
@@ -99,10 +120,14 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user || action.payload;
-        state.token = action.payload.token || state.token;
+        const user = action.payload?.user || action.payload;
+        state.user = user;
+        state.token = action.payload?.token || state.token;
         state.isAuthenticated = true;
         state.error = null;
+        if (user) {
+          localStorage.setItem('user', JSON.stringify(user));
+        }
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -115,10 +140,14 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user || action.payload;
-        state.token = action.payload.token || state.token;
+        const user = action.payload?.user || action.payload;
+        state.user = user;
+        state.token = action.payload?.token || state.token;
         state.isAuthenticated = true;
         state.error = null;
+        if (user) {
+          localStorage.setItem('user', JSON.stringify(user));
+        }
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
@@ -130,9 +159,13 @@ const authSlice = createSlice({
       })
       .addCase(fetchCurrentUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user || action.payload;
+        const user = action.payload?.user || action.payload;
+        state.user = user;
         state.isAuthenticated = true;
         state.error = null;
+        if (user) {
+          localStorage.setItem('user', JSON.stringify(user));
+        }
       })
       .addCase(fetchCurrentUser.rejected, (state, action) => {
         state.loading = false;
@@ -140,6 +173,8 @@ const authSlice = createSlice({
         state.token = null;
         state.isAuthenticated = false;
         state.error = action.payload;
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
       })
       // logoutUser
       .addCase(logoutUser.fulfilled, (state) => {
@@ -148,6 +183,8 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.loading = false;
         state.error = null;
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
       });
   },
 });

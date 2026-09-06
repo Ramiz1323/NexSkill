@@ -53,16 +53,19 @@ router.get(
     const skillProgress = skillsFromDb && skillsFromDb.length > 0
       ? skillsFromDb.map((s, idx) => ({
           id: s._id || idx + 1,
+          skill: s.skill?.name || 'Technical Skill',
           skillName: s.skill?.name || 'Technical Skill',
-          proficiency: s.proficiencyScore || 80,
+          name: s.skill?.name || 'Technical Skill',
+          proficiency: s.proficiencyScore || (85 - idx * 3),
+          progress: s.proficiencyScore || (85 - idx * 3),
           status: s.isVerified ? 'Verified' : 'In Progress',
         }))
       : [
-          { id: 1, skillName: 'React 19 & State Architecture', proficiency: 92, status: 'Verified' },
-          { id: 2, skillName: 'Node.js Microservices & REST', proficiency: 88, status: 'Verified' },
-          { id: 3, skillName: 'Cloud & Docker Containerization', proficiency: 75, status: 'Verified' },
-          { id: 4, skillName: 'LangChain & RAG Pipelines', proficiency: 82, status: 'Verified' },
-          { id: 5, skillName: 'PostgreSQL Database Indexing', proficiency: 70, status: 'Remediated' },
+          { id: 1, skill: 'React 19', skillName: 'React 19', name: 'React 19', proficiency: 92, progress: 92, status: 'Verified' },
+          { id: 2, skill: 'Node.js', skillName: 'Node.js', name: 'Node.js', proficiency: 88, progress: 88, status: 'Verified' },
+          { id: 3, skill: 'Docker', skillName: 'Docker', name: 'Docker', proficiency: 75, progress: 75, status: 'Verified' },
+          { id: 4, skill: 'AI / RAG', skillName: 'AI / RAG', name: 'AI / RAG', proficiency: 82, progress: 82, status: 'Verified' },
+          { id: 5, skill: 'PostgreSQL', skillName: 'PostgreSQL', name: 'PostgreSQL', proficiency: 70, progress: 70, status: 'Remediated' },
         ];
 
     const progressData = {
@@ -181,11 +184,11 @@ router.get(
       targetRole: 'Full-Stack AI Developer',
       credentials: displayCredentials,
       skillProgress: [
-        { skill: 'React 19 & Modern State', progress: 92, level: 'Advanced' },
-        { skill: 'Node.js Microservices', progress: 88, level: 'Advanced' },
-        { skill: 'AI & LangChain RAG', progress: 85, level: 'Advanced' },
-        { skill: 'Docker & Kubernetes', progress: 74, level: 'Intermediate' },
-        { skill: 'PostgreSQL & Databases', progress: 70, level: 'Intermediate' },
+        { id: 1, skill: 'React 19', skillName: 'React 19', name: 'React 19', proficiency: 92, progress: 92, level: 'Advanced' },
+        { id: 2, skill: 'Node.js', skillName: 'Node.js', name: 'Node.js', proficiency: 88, progress: 88, level: 'Advanced' },
+        { id: 3, skill: 'AI / RAG', skillName: 'AI / RAG', name: 'AI / RAG', proficiency: 82, progress: 82, level: 'Advanced' },
+        { id: 4, skill: 'Docker', skillName: 'Docker', name: 'Docker', proficiency: 75, progress: 75, level: 'Intermediate' },
+        { id: 5, skill: 'PostgreSQL', skillName: 'PostgreSQL', name: 'PostgreSQL', proficiency: 70, progress: 70, level: 'Intermediate' },
       ],
       radarMetrics: [
         { subject: 'System Design', value: 80, fullMark: 100 },
