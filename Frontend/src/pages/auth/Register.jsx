@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { User, Mail, Lock, UserCheck, AlertCircle, Sparkles } from 'lucide-react';
+import { User, Mail, Lock, UserCheck, AlertCircle, Sparkles, Eye, EyeOff } from 'lucide-react';
 import { registerUser, clearAuthError } from '../../redux/slices/authSlice';
 import Button from '../../components/common/Button';
 import Card from '../../components/common/Card';
@@ -13,6 +13,7 @@ const Register = () => {
     password: '',
     role: 'student',
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const [validationError, setValidationError] = useState('');
 
@@ -116,15 +117,24 @@ const Register = () => {
           <div className="relative flex items-center">
             <Lock className="w-4 h-4 text-slate-400 absolute left-3 pointer-events-none" />
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               id="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               placeholder="Create a password (min 6 chars)"
-              className="w-full pl-9 pr-4 py-2.5 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:bg-white text-slate-900 placeholder-slate-400 outline-none transition-all shadow-sm"
+              className="w-full pl-9 pr-10 py-2.5 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:bg-white text-slate-900 placeholder-slate-400 outline-none transition-all shadow-sm"
               required
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 p-1 text-slate-400 hover:text-slate-600 focus:outline-none transition-colors cursor-pointer"
+              title={showPassword ? 'Hide password' : 'Show password'}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
           </div>
         </div>
 
