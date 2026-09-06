@@ -1,13 +1,16 @@
 import axiosClient from './axiosClient';
 
 export const getMarketDemandTrends = async (params = {}) => {
-  return await axiosClient.get('/market-intelligence/demand', { params });
+  const response = await axiosClient.get('/market-intelligence/demand', { params });
+  return response?.data ?? response;
 };
 
 export const getIndustrySkillDistribution = async (params = {}) => {
-  return await axiosClient.get('/market-intelligence/skills', { params });
+  const response = await axiosClient.get('/market-intelligence/skills', { params });
+  return response?.data ?? response;
 };
 
 export const getLabourMarketSummary = async (params = {}) => {
-  return await axiosClient.get('/market-intelligence/summary', { params });
+  const response = await axiosClient.get('/market-intelligence/summary', { params });
+  return response?.data ?? response;
 };

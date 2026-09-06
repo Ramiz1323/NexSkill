@@ -60,10 +60,10 @@ const CredentialTracker = () => {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full badge-indigo text-xs font-bold mb-2">
             <Award className="w-3.5 h-3.5" />
-            <span>Verified Credential & Mastery Wallet</span>
+            <span>Verified Credential & Mastery</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Credential & Progress Mastery Wallet
+            Credential & Progress Mastery
           </h1>
           <p className="text-sm text-slate-500 mt-1">
             Track verified skill proficiency scores and log accredited digital micro-credentials.
@@ -99,7 +99,7 @@ const CredentialTracker = () => {
             88%
           </div>
           <span className="text-xs text-slate-500 mt-1.5 block">
-            Validated across 6 core pillars
+            Validated across 5 core pillars
           </span>
         </Card>
       </section>

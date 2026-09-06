@@ -344,7 +344,6 @@ const DashboardOverview = () => {
         <Card
           title="Accredited Credentials"
           subtitle="Verified digital certifications and badges"
-          badge="Wallet"
         >
           <div className="flex flex-col gap-3">
             {(credentials && credentials.length > 0 ? credentials : [

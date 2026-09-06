@@ -88,7 +88,12 @@ const demandSlice = createSlice({
       })
       .addCase(fetchSkillForecast.fulfilled, (state, action) => {
         state.loading = false;
-        state.projections = action.payload;
+        const payload = action.payload;
+        state.projections = Array.isArray(payload)
+          ? payload
+          : Array.isArray(payload?.data)
+          ? payload.data
+          : [];
       })
       .addCase(fetchSkillForecast.rejected, (state, action) => {
         state.loading = false;
@@ -102,7 +107,12 @@ const demandSlice = createSlice({
       })
       .addCase(fetchEmergingRoles.fulfilled, (state, action) => {
         state.loading = false;
-        state.emergingRoles = action.payload;
+        const payload = action.payload;
+        state.emergingRoles = Array.isArray(payload)
+          ? payload
+          : Array.isArray(payload?.data)
+          ? payload.data
+          : [];
       })
       .addCase(fetchEmergingRoles.rejected, (state, action) => {
         state.loading = false;
@@ -116,7 +126,12 @@ const demandSlice = createSlice({
       })
       .addCase(fetchAutomationAnalysis.fulfilled, (state, action) => {
         state.loading = false;
-        state.automationIndex = action.payload;
+        const payload = action.payload;
+        state.automationIndex = Array.isArray(payload)
+          ? payload
+          : Array.isArray(payload?.data)
+          ? payload.data
+          : [];
       })
       .addCase(fetchAutomationAnalysis.rejected, (state, action) => {
         state.loading = false;

@@ -25,7 +25,7 @@ const AtsResumeAnalyzer = () => {
             <span>Automated ATS Resume & Keyword Diagnostic</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            AI ATS Resume & Keyword Analyzer
+            AI ATS Resume Analyzer
           </h1>
           <p className="text-sm text-slate-500 mt-1">
             Analyze your resume against real-world industry keyword requirements and detect skill gaps.

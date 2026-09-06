@@ -9,30 +9,36 @@ const router = Router();
 router.get(
   ['/demand', '/trends'],
   asyncHandler(async (req, res) => {
-    let records = [];
-    try {
-      records = await LabourMarket.find().lean();
-    } catch (err) {
-      console.warn('⚠️ LabourMarket query failed:', err.message);
-    }
-    
-    if (records && records.length > 0) {
-      return res.status(200).json(
-        new ApiResponse(200, records, 'Market demand trends retrieved successfully')
-      );
-    }
+    const { industry, region, timeframe } = req.query;
 
-    // High-fidelity fallback telemetry for SIH 2026 live demonstration
-    const fallbackDemand = [
-      { id: 1, role: 'Full-Stack AI Developer', openPositions: 14200, growthRate: '+34%', avgSalary: '₹16-24 LPA', topRegion: 'Bengaluru / Hyderabad', priority: 'Critical' },
-      { id: 2, role: 'Cloud Platform Engineer (AWS/GCP)', openPositions: 11800, growthRate: '+28%', avgSalary: '₹14-22 LPA', topRegion: 'Pune / NCR', priority: 'High' },
-      { id: 3, role: 'Data & MLOps Specialist', openPositions: 8900, growthRate: '+42%', avgSalary: '₹18-28 LPA', topRegion: 'Bengaluru / Chennai', priority: 'Critical' },
-      { id: 4, role: 'Cybersecurity Architect', openPositions: 6400, growthRate: '+31%', avgSalary: '₹20-32 LPA', topRegion: 'Mumbai / Hyderabad', priority: 'High' },
-      { id: 5, role: 'Embedded IoT & Edge AI Engineer', openPositions: 5200, growthRate: '+22%', avgSalary: '₹12-18 LPA', topRegion: 'Pune / Ahmedabad', priority: 'Moderate' },
+    const baseDemandTrends = [
+      { period: 'Oct 2025', demandIndex: 120 },
+      { period: 'Nov 2025', demandIndex: 145 },
+      { period: 'Dec 2025', demandIndex: 160 },
+      { period: 'Jan 2026', demandIndex: 195 },
+      { period: 'Feb 2026', demandIndex: 240 },
+      { period: 'Mar 2026', demandIndex: 290 },
     ];
 
+    const timeframeMultiplier =
+      timeframe === '1M' ? 1.25 :
+      timeframe === '1Y' ? 0.9 :
+      timeframe === '3Y' ? 0.75 :
+      1.0;
+
+    const industryMultiplier =
+      industry === 'Artificial Intelligence' ? 1.3 :
+      industry === 'Banking & FinTech' ? 1.1 :
+      industry === 'Healthcare Tech' ? 0.95 :
+      1.0;
+
+    const adjusted = baseDemandTrends.map((d) => ({
+      period: d.period,
+      demandIndex: Math.round(d.demandIndex * timeframeMultiplier * industryMultiplier),
+    }));
+
     return res.status(200).json(
-      new ApiResponse(200, fallbackDemand, 'Market demand trends retrieved successfully')
+      new ApiResponse(200, adjusted, 'Market demand trends retrieved successfully')
     );
   })
 );
@@ -41,13 +47,33 @@ router.get(
 router.get(
   ['/skills', '/distribution'],
   asyncHandler(async (req, res) => {
-    const skillDistribution = [
+    const { industry } = req.query;
+
+    let skillDistribution = [
       { category: 'AI / Machine Learning', weight: 32, topSkills: ['PyTorch', 'LangChain', 'HuggingFace', 'FastAPI'] },
       { category: 'Cloud Infrastructure & DevOps', weight: 26, topSkills: ['Docker', 'Kubernetes', 'Terraform', 'AWS ECS'] },
       { category: 'Modern Frontend & UI/UX', weight: 20, topSkills: ['React 19', 'Next.js', 'TailwindCSS', 'TypeScript'] },
       { category: 'Distributed Backend & Data', weight: 14, topSkills: ['Node.js', 'Go', 'PostgreSQL', 'Redis'] },
       { category: 'Enterprise Security & Compliance', weight: 8, topSkills: ['OAuth2.0', 'Zero Trust', 'SIEM', 'SOC2'] },
     ];
+
+    if (industry === 'Artificial Intelligence') {
+      skillDistribution = [
+        { category: 'LLM Systems & Autonomous Agents', weight: 38, topSkills: ['LangChain', 'CrewAI', 'LlamaIndex', 'vLLM'] },
+        { category: 'Deep Learning & Neural Networks', weight: 28, topSkills: ['PyTorch', 'CUDA', 'Hugging Face', 'JAX'] },
+        { category: 'MLOps & Model Governance', weight: 18, topSkills: ['MLflow', 'Kubeflow', 'Triton', 'Weights & Biases'] },
+        { category: 'Vector Databases & Retrieval', weight: 10, topSkills: ['Pinecone', 'Milvus', 'Qdrant', 'Chroma'] },
+        { category: 'AI Ethics & Alignment', weight: 6, topSkills: ['RLHF', 'Red Teaming', 'Guardrails', 'Fairness'] },
+      ];
+    } else if (industry === 'Banking & FinTech') {
+      skillDistribution = [
+        { category: 'High-Throughput Distributed Systems', weight: 34, topSkills: ['Kafka', 'Go', 'Java Spring Boot', 'Redis'] },
+        { category: 'Financial Security & Compliance', weight: 26, topSkills: ['PCI-DSS', 'OAuth2', 'Zero Trust', 'KMS'] },
+        { category: 'Cloud Infrastructure & SRE', weight: 20, topSkills: ['AWS', 'Kubernetes', 'Terraform', 'Datadog'] },
+        { category: 'Real-Time Fraud Detection & ML', weight: 12, topSkills: ['Graph DBs', 'Scikit-Learn', 'Flink'] },
+        { category: 'Mobile & Consumer Banking UI', weight: 8, topSkills: ['React Native', 'Flutter', 'Swift', 'Kotlin'] },
+      ];
+    }
 
     return res.status(200).json(
       new ApiResponse(200, skillDistribution, 'Industry skill distribution retrieved successfully')
@@ -59,12 +85,21 @@ router.get(
 router.get(
   '/summary',
   asyncHandler(async (req, res) => {
+    const { industry, region, timeframe } = req.query;
+
+    let basePostings = 184500;
+    if (industry === 'Artificial Intelligence') basePostings = 52400;
+    else if (industry === 'Banking & FinTech') basePostings = 41200;
+    else if (industry === 'Healthcare Tech') basePostings = 28600;
+    else if (industry === 'Information Technology') basePostings = 112000;
+
     const summary = {
-      totalActivePostings: 184500,
-      monthlyHiringPace: '+18.4%',
-      talentDeficitRatio: '1 : 3.8',
+      totalActivePostings: basePostings,
+      monthlyHiringPace: timeframe === '1M' ? '+24.8%' : timeframe === '1Y' ? '+14.2%' : '+18.4%',
+      talentDeficitRatio: industry === 'Artificial Intelligence' ? '1 : 5.4' : '1 : 3.8',
       topTierInstitutionsAssessed: 142,
       industryCertificationsValidated: 8400,
+      topEmergingSkill: industry === 'Artificial Intelligence' ? 'Autonomous AI Agents' : 'Full-Stack AI Developer',
       lastUpdated: new Date().toISOString(),
     };
 
